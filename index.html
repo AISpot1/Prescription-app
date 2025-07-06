@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctors Drug Prescription System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f4f8;
+      display: flex;
+    }
+    .sidebar {
+      width: 250px;
+      background: #007BFF;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+      transform: translateX(-100%);
+      position: fixed;
+      z-index: 999;
+    }
+    .sidebar.visible {
+      transform: translateX(0);
+    }
+    .sidebar h3 {
+      margin-top: 0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .container {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 40px;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    h2 {
+      text-align: center;
+      color: #007BFF;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .reset {
+      background: #f44336;
+      margin-top: 5px;
+    }
+    .login, .form-section {
+      display: none;
+    }
+    .visible-section {
+      display: block;
+    }
+    .toggle-history {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #007BFF;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+      display: none;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+    .modal-content .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-history" id="toggleHistoryBtn" onclick="toggleSidebar()">📁</button>
+
+  <div class="sidebar" id="sidebar">
+    <h3>Prescription History</h3>
+    <ul id="historyList"></ul>
+  </div>
+
+  <div class="container login visible-section" id="loginSection">
+    <h2>Doctor Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="container form-section" id="formSection">
+    <h2>💊 Patient Prescription Form</h2>
+    <input type="text" id="patientName" placeholder="Patient Name" />
+    <select id="patientAge">
+      <option value="">Select Age</option>
+    </select>
+    <select id="illness">
+      <option value="">Select Illness</option>
+    </select>
+    <input type="number" id="days" placeholder="Days of Sickness" />
+    <textarea id="symptoms" placeholder="Additional Symptoms (e.g. fever, cough)"></textarea>
+    <button onclick="generatePrescription()">Prescribe</button>
+    <button class="reset" onclick="resetForm()">Reset</button>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div id="output"></div>
+      <div class="btn-group">
+        <button onclick="sharePrescription()">Share</button>
+        <button onclick="printPrescription()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  let doctorName = "";
+
+  const ages = Array.from({ length: 100 }, (_, i) => i + 1);
+  const ageSelect = document.getElementById("patientAge");
+  ages.forEach(age => {
+    const opt = document.createElement("option");
+    opt.value = age;
+    opt.textContent = age;
+    ageSelect.appendChild(opt);
+  });
+
+  const illnessData = [
+    {
+      condition: "Malaria",
+      drugs: ["Artemether", "Lumefantrine"],
+      prescription: "Take Artemether/Lumefantrine 80/480mg twice daily for 3 days",
+      diet: ["Plenty of fluids", "Fruits", "Light meals"]
+    },
+    {
+      condition: "Typhoid",
+      drugs: ["Ciprofloxacin", "Paracetamol"],
+      prescription: "Ciprofloxacin 500mg twice daily for 7 days",
+      diet: ["Boiled foods", "Hydration", "Avoid spicy meals"]
+    },
+    {
+      condition: "Asthma",
+      drugs: ["Salbutamol", "Prednisolone"],
+      prescription: "Use Salbutamol inhaler every 6 hours",
+      diet: ["Avoid allergens", "Eat omega-3 rich foods"]
+    },
+    {
+      condition: "Diabetes",
+      drugs: ["Metformin", "Insulin"],
+      prescription: "Metformin 500mg twice daily",
+      diet: ["Low sugar", "High fiber diet"]
+    },
+    {
+      condition: "Hypertension",
+      drugs: ["Lisinopril", "Amlodipine"],
+      prescription: "Lisinopril 10mg once daily",
+      diet: ["Low salt", "More vegetables"]
+    },
+    {
+      condition: "Ulcer",
+      drugs: ["Omeprazole", "Antacids"],
+      prescription: "Omeprazole 20mg before breakfast for 14 days",
+      diet: ["No spicy food", "Frequent small meals"]
+    },
+    {
+      condition: "Hepatitis B",
+      drugs: ["Tenofovir", "Entecavir"],
+      prescription: "Tenofovir 300mg daily",
+      diet: ["Low-fat diet", "Plenty of fruits"]
+    },
+    {
+      condition: "COVID-19",
+      drugs: ["Paracetamol", "Vitamin C", "Zinc"],
+      prescription: "Paracetamol 500mg every 6 hours as needed",
+      diet: ["Fruits", "Plenty of rest", "Hydration"]
+    },
+    {
+      condition: "Tuberculosis",
+      drugs: ["Rifampicin", "Isoniazid"],
+      prescription: "Standard 6-month TB therapy",
+      diet: ["High protein", "Vitamin supplements"]
+    },
+    {
+      condition: "Pneumonia",
+      drugs: ["Azithromycin", "Amoxicillin"],
+      prescription: "Azithromycin 500mg once daily for 3 days",
+      diet: ["Warm fluids", "Soft food"]
+ 
+    },
+   
+  
+  
+  {
+  condition: "Anemia",
+  drugs: ["DrugX_Anemia", "DrugY_Anemia"],
+  prescription: "Take DrugX and DrugY for 3 days as prescribed.",
+  diet: ["Avoid spicy food", "Hydration", "Vegetables"]
+},
+{
+  condition: "Arthritis",
+  drugs: ["DrugX_Arthritis", "DrugY_Arthritis"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Low salt", "High protein", "Fruits"]
+},
+{
+  condition: "Cataract",
+  drugs: ["DrugX_Cataract", "DrugY_Cataract"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Avoid spicy food", "Low salt", "Omega-3"]
+},
+{
+  condition: "Glaucoma",
+  drugs: ["DrugX_Glaucoma", "DrugY_Glaucoma"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Vegetables", "Avoid spicy food", "Fiber-rich meals"]
+},
+{
+  condition: "Sinusitis",
+  drugs: ["DrugX_Sinusitis", "DrugY_Sinusitis"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Omega-3", "High protein", "Fruits"]
+},
+{
+  condition: "Tonsillitis",
+  drugs: ["DrugX_Tonsillitis", "DrugY_Tonsillitis"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Hydration", "Fruits", "Vegetables"]
+},
+{
+  condition: "Appendicitis",
+  drugs: ["DrugX_Appendicitis", "DrugY_Appendicitis"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Avoid spicy food", "Fruits", "Low salt"]
+},
+{
+  condition: "Hernia",
+  drugs: ["DrugX_Hernia", "DrugY_Hernia"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Hydration", "Vegetables", "Low fat"]
+},
+{
+  condition: "Depression",
+  drugs: ["DrugX_Depression", "DrugY_Depression"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Omega-3", "Fruits", "Low salt"]
+},
+{
+  condition: "Anxiety",
+  drugs: ["DrugX_Anxiety", "DrugY_Anxiety"],
+  prescription: "Take DrugX and DrugY for 8 days as prescribed.",
+  diet: ["Fruits", "Hydration", "Avoid spicy food"]
+},
+{
+  condition: "Insomnia",
+  drugs: ["DrugX_Insomnia", "DrugY_Insomnia"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Low salt", "Hydration", "Omega-3"]
+},
+{
+  condition: "Allergy",
+  drugs: ["DrugX_Allergy", "DrugY_Allergy"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Fiber-rich meals", "Hydration", "Vegetables"]
+},
+{
+  condition: "Eczema",
+  drugs: ["DrugX_Eczema", "DrugY_Eczema"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Vegetables", "Omega-3", "Low salt"]
+},
+{
+  condition: "Psoriasis",
+  drugs: ["DrugX_Psoriasis", "DrugY_Psoriasis"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Low fat", "Hydration", "Avoid spicy food"]
+},
+{
+  condition: "Gonorrhea",
+  drugs: ["DrugX_Gonorrhea", "DrugY_Gonorrhea"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Vegetables", "Fruits", "Hydration"]
+},
+{
+  condition: "Syphilis",
+  drugs: ["DrugX_Syphilis", "DrugY_Syphilis"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Hydration", "Low salt", "Fruits"]
+},
+{
+  condition: "UTI",
+  drugs: ["DrugX_UTI", "DrugY_UTI"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Hydration", "Low salt", "Vegetables"]
+},
+{
+  condition: "Kidney Stones",
+  drugs: ["DrugX_KidneyStones", "DrugY_KidneyStones"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Plenty of fluids", "Avoid spicy food", "Low fat"]
+},
+{
+  condition: "Prostate Enlargement",
+  drugs: ["DrugX_ProstateEnlargement", "DrugY_ProstateEnlargement"],
+  prescription: "Take DrugX and DrugY for 5 days as prescribed.",
+  diet: ["Hydration", "Vegetables", "Omega-3"]
+},
+{
+  condition: "Menstrual Pain",
+  drugs: ["DrugX_MenstrualPain", "DrugY_MenstrualPain"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Fruits", "Warm fluids", "Low salt"]
+},
+{
+  condition: "Fibroids",
+  drugs: ["DrugX_Fibroids", "DrugY_Fibroids"],
+  prescription: "Take DrugX and DrugY for 8 days as prescribed.",
+  diet: ["Hydration", "Low fat", "Vegetables"]
+},
+{
+  condition: "Ovarian Cyst",
+  drugs: ["DrugX_OvarianCyst", "DrugY_OvarianCyst"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Fruits", "Fiber-rich meals", "Low salt"]
+},
+{
+  condition: "Astigmatism",
+  drugs: ["DrugX_Astigmatism", "DrugY_Astigmatism"],
+  prescription: "Take DrugX and DrugY for 5 days as prescribed.",
+  diet: ["Omega-3", "Low fat", "Vegetables"]
+},
+{
+  condition: "Ear Infection",
+  drugs: ["DrugX_EarInfection", "DrugY_EarInfection"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Fruits", "Vegetables", "Hydration"]
+},
+{
+  condition: "Toothache",
+  drugs: ["DrugX_Toothache", "DrugY_Toothache"],
+  prescription: "Take DrugX and DrugY for 3 days as prescribed.",
+  diet: ["Soft foods", "Warm fluids", "Hydration"]
+},
+{
+  condition: "Obesity",
+  drugs: ["DrugX_Obesity", "DrugY_Obesity"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Low fat", "High protein", "Fiber-rich meals"]
+},
+{
+  condition: "Back Pain",
+  drugs: ["DrugX_BackPain", "DrugY_BackPain"],
+  prescription: "Take DrugX and DrugY for 5 days as prescribed.",
+  diet: ["Hydration", "Vegetables", "Fruits"]
+},
+{
+  condition: "Liver Cirrhosis",
+  drugs: ["DrugX_LiverCirrhosis", "DrugY_LiverCirrhosis"],
+  prescription: "Take DrugX and DrugY for 8 days as prescribed.",
+  diet: ["Low salt", "Fruits", "Hydration"]
+},
+{
+  condition: "Gallstones",
+  drugs: ["DrugX_Gallstones", "DrugY_Gallstones"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Low fat", "Vegetables", "Hydration"]
+},
+{
+  condition: "Pancreatitis",
+  drugs: ["DrugX_Pancreatitis", "DrugY_Pancreatitis"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Hydration", "Low salt", "Omega-3"]
+},
+{
+  condition: "Scabies",
+  drugs: ["DrugX_Scabies", "DrugY_Scabies"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["High protein", "Low fat", "Fruits"]
+},
+{
+  condition: "Ringworm",
+  drugs: ["DrugX_Ringworm", "DrugY_Ringworm"],
+  prescription: "Take DrugX and DrugY for 5 days as prescribed.",
+  diet: ["Vegetables", "Fruits", "Hydration"]
+},
+{
+  condition: "Athlete’s Foot",
+  drugs: ["DrugX_AthletesFoot", "DrugY_AthletesFoot"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Omega-3", "Vegetables", "Fruits"]
+},
+{
+  condition: "Conjunctivitis",
+  drugs: ["DrugX_Conjunctivitis", "DrugY_Conjunctivitis"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Fruits", "Hydration", "Low salt"]
+},
+{
+  condition: "Warts",
+  drugs: ["DrugX_Warts", "DrugY_Warts"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Omega-3", "Vegetables", "Fiber-rich meals"]
+},
+{
+  condition: "Low Blood Pressure",
+  drugs: ["DrugX_LowBP", "DrugY_LowBP"],
+  prescription: "Take DrugX and DrugY for 5 days as prescribed.",
+  diet: ["High salt", "Fruits", "Hydration"]
+},
+{
+  condition: "High Cholesterol",
+  drugs: ["DrugX_HighCholesterol", "DrugY_HighCholesterol"],
+  prescription: "Take DrugX and DrugY for 8 days as prescribed.",
+  diet: ["Low fat", "Fruits", "Fiber-rich meals"]
+},
+{
+  condition: "Cough",
+  drugs: ["DrugX_Cough", "DrugY_Cough"],
+  prescription: "Take DrugX and DrugY for 3 days as prescribed.",
+  diet: ["Warm fluids", "Hydration", "Fruits"]
+},
+{
+  condition: "Cold",
+  drugs: ["DrugX_Cold", "DrugY_Cold"],
+  prescription: "Take DrugX and DrugY for 4 days as prescribed.",
+  diet: ["Vitamin C rich foods", "Fruits", "Warm soups"]
+},
+{
+  condition: "Jaundice",
+  drugs: ["DrugX_Jaundice", "DrugY_Jaundice"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Avoid alcohol", "Low fat", "Fruits"]
+},
+{
+  condition: "Malnutrition",
+  drugs: ["DrugX_Malnutrition", "DrugY_Malnutrition"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["High protein", "Multivitamins", "Fruits"]
+},
+{
+  condition: "Mumps",
+  drugs: ["DrugX_Mumps", "DrugY_Mumps"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Hydration", "Soft foods", "Fruits"]
+},
+{
+  condition: "Tetanus",
+  drugs: ["DrugX_Tetanus", "DrugY_Tetanus"],
+  prescription: "Take DrugX and DrugY for 8 days as prescribed.",
+  diet: ["High protein", "Hydration", "Vegetables"]
+},
+{
+  condition: "Polio",
+  drugs: ["DrugX_Polio", "DrugY_Polio"],
+  prescription: "Take DrugX and DrugY for 9 days as prescribed.",
+  diet: ["Protein-rich", "Calcium", "Vegetables"]
+},
+{
+  condition: "Rabies",
+  drugs: ["DrugX_Rabies", "DrugY_Rabies"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Fluids", "Balanced diet", "Fruits"]
+},
+{
+  condition: "Lupus",
+  drugs: ["DrugX_Lupus", "DrugY_Lupus"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Omega-3", "Fruits", "Vegetables"]
+},
+{
+  condition: "Multiple Sclerosis",
+  drugs: ["DrugX_MS", "DrugY_MS"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Low salt", "Hydration", "Vegetables"]
+},
+{
+  condition: "Leukemia",
+  drugs: ["DrugX_Leukemia", "DrugY_Leukemia"],
+  prescription: "Take DrugX and DrugY for 10 days as prescribed.",
+  diet: ["Hydration", "Vegetables", "Low fat"]
+},
+{
+  condition: "Vertigo",
+  drugs: ["DrugX_Vertigo", "DrugY_Vertigo"],
+  prescription: "Take DrugX and DrugY for 6 days as prescribed.",
+  diet: ["Omega-3", "Hydration", "Fruits"]
+},
+{
+  condition: "Gastritis",
+  drugs: ["DrugX_Gastritis", "DrugY_Gastritis"],
+  prescription: "Take DrugX and DrugY for 7 days as prescribed.",
+  diet: ["Avoid spicy foods", "Warm fluids", "Fiber-rich meals"]
+}
+
+  
+  
+    // 🔁 Add more here if needed up to 100 illnesses
+  ];
+
+  const symptomSupport = {
+    fever: { drugs: ["Paracetamol"], prescription: "500mg every 6 hours" },
+    cough: { drugs: ["Cough Syrup"], prescription: "10ml twice a day" },
+    headache: { drugs: ["Ibuprofen"], prescription: "200mg every 8 hours" },
+    vomiting: { drugs: ["Ondansetron"], prescription: "4mg every 8 hours" },
+    sorethroat: { drugs: ["Lozenges"], prescription: "One every 4 hours" },
+    cold: { drugs: ["Vitamin C"], prescription: "1000mg daily" }
+  };
+
+  const illnessSelect = document.getElementById("illness");
+  illnessData.forEach(entry => {
+    const opt = document.createElement("option");
+    opt.value = entry.condition;
+    opt.textContent = entry.condition;
+    illnessSelect.appendChild(opt);
+  });
+
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    if (user && pass) {
+      doctorName = user;
+      document.getElementById("loginSection").classList.remove("visible-section");
+      document.getElementById("formSection").classList.add("visible-section");
+      document.getElementById("toggleHistoryBtn").style.display = "block";
+    } else {
+      alert("Enter both username and password");
+    }
+  }
+
+  function generatePrescription() {
+    const name = document.getElementById("patientName").value;
+    const age = document.getElementById("patientAge").value;
+    const illness = document.getElementById("illness").value;
+    const days = document.getElementById("days").value;
+    const symptoms = document.getElementById("symptoms").value.toLowerCase().split(/[\\s,]+/);
+
+    const data = illnessData.find(entry => entry.condition === illness);
+    let extraDrugs = [], extraPrescriptions = [];
+
+    symptoms.forEach(symptom => {
+      if (symptomSupport[symptom]) {
+        extraDrugs = extraDrugs.concat(symptomSupport[symptom].drugs);
+        extraPrescriptions.push(`${symptomSupport[symptom].drugs.join(", ")}: ${symptomSupport[symptom].prescription}`);
+      }
+    });
+
+    if (data) {
+      const result = `
+        <p><strong>Patient:</strong> ${name}</p>
+        <p><strong>Age:</strong> ${age}</p>
+        <p><strong>Illness:</strong> ${illness}</p>
+        <p><strong>Days Sick:</strong> ${days} days</p>
+        <p><strong>Symptoms:</strong> ${symptoms.join(", ")}</p>
+        <hr>
+        <p><strong>Drugs:</strong> ${[...data.drugs, ...extraDrugs].join(", ")}</p>
+        <p><strong>Prescription:</strong><br> ${data.prescription}<br>${extraPrescriptions.join("<br>")}</p>
+        <p><strong>Recommended Diet:</strong> ${data.diet.join(", ")}</p>
+        <hr>
+        <p><strong>Signed ✍️ by:</strong> Dr. ${doctorName}</p>
+      `;
+      document.getElementById("output").innerHTML = result;
+      document.getElementById("modal").style.display = "flex";
+      addToHistory(name, illness);
+    } else {
+      alert("No data found for selected illness.");
+    }
+  }
+
+  function resetForm() {
+    document.getElementById("patientName").value = "";
+    document.getElementById("patientAge").value = "";
+    document.getElementById("illness").value = "";
+    document.getElementById("days").value = "";
+    document.getElementById("symptoms").value = "";
+    document.getElementById("output").innerHTML = "";
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+
+  function sharePrescription() {
+    const result = document.getElementById("output").innerText;
+    if (navigator.share) {
+      navigator.share({ title: "Prescription", text: result });
+    } else {
+      navigator.clipboard.writeText(result);
+      alert("Prescription copied to clipboard!");
+    }
+  }
+
+  function printPrescription() {
+    const content = document.getElementById("output").innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print Prescription</title></head><body>');
+    printWindow.document.write(content);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
+
+  function addToHistory(patient, illness) {
+    const li = document.createElement("li");
+    li.textContent = `${patient} - ${illness}`;
+    document.getElementById("historyList").appendChild(li);
+  }
+
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("visible");
+  }
+</script>
+</body>
+</html>
+
+
