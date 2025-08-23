@@ -546,19 +546,25 @@
   diet: ["Avoid spicy foods", "Warm fluids", "Fiber-rich meals"]
 }
 
-  
-  
-    // 🔁 Add more here if needed up to 100 illnesses
-  ];
 
-  const symptomSupport = {
-    fever: { drugs: ["Paracetamol"], prescription: "500mg every 6 hours" },
-    cough: { drugs: ["Cough Syrup"], prescription: "10ml twice a day" },
-    headache: { drugs: ["Ibuprofen"], prescription: "200mg every 8 hours" },
-    vomiting: { drugs: ["Ondansetron"], prescription: "4mg every 8 hours" },
-    sorethroat: { drugs: ["Lozenges"], prescription: "One every 4 hours" },
-    cold: { drugs: ["Vitamin C"], prescription: "1000mg daily" }
-  };
+const symptomSupport = {
+  fever: { drugs: ["Paracetamol"], prescription: "500mg every 6 hours" },
+  cold: { drugs: ["Vitamin C"], prescription: "1000mg daily" },
+  headache: { drugs: ["Ibuprofen"], prescription: "200mg every 8 hours" },
+  cough: { drugs: ["Cough Syrup"], prescription: "10ml twice a day" },
+  sorethroat: { drugs: ["Lozenges"], prescription: "One every 4 hours" },
+  vomiting: { drugs: ["Ondansetron"], prescription: "4mg every 8 hours" },
+  fatigue: { drugs: ["Multivitamins"], prescription: "One daily" },
+  highbodytemperature: { drugs: ["Acetaminophen"], prescription: "500mg every 4-6 hours" },
+  shortnessofbreath: { drugs: ["Bronchodilator"], prescription: "As directed" },
+  nausea: { drugs: ["Domperidone"], prescription: "10mg before meals" },
+  diarrhea: { drugs: ["ORS", "Loperamide"], prescription: "As directed" },
+  jointpain: { drugs: ["Diclofenac"], prescription: "50mg twice daily" },
+  chestpain: { drugs: ["Aspirin (low dose)"], prescription: "75mg daily (consult doctor)" },
+  rash: { drugs: ["Antihistamine Cream"], prescription: "Apply twice daily" },
+  dizziness: { drugs: ["Meclizine"], prescription: "25mg as needed" }
+};
+
 
   const illnessSelect = document.getElementById("illness");
   illnessData.forEach(entry => {
@@ -594,7 +600,7 @@
     symptoms.forEach(symptom => {
       if (symptomSupport[symptom]) {
         extraDrugs = extraDrugs.concat(symptomSupport[symptom].drugs);
-        extraPrescriptions.push(`${symptomSupport[symptom].drugs.join(", ")}: ${symptomSupport[symptom].prescription}`);
+        extraPrescriptions.push(${symptomSupport[symptom].drugs.join(", ")}: ${symptomSupport[symptom].prescription});
       }
     });
 
@@ -655,7 +661,7 @@
 
   function addToHistory(patient, illness) {
     const li = document.createElement("li");
-    li.textContent = `${patient} - ${illness}`;
+    li.textContent = ${patient} - ${illness};
     document.getElementById("historyList").appendChild(li);
   }
 
@@ -665,5 +671,3 @@
 </script>
 </body>
 </html>
-
-
