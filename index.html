@@ -171,6 +171,27 @@
   <script>
   let doctorName = "";
 
+const validDoctors = {
+  "Dr. Seker": "S123",
+  "Dr. Malu": "M123",
+  "Dr. Belo": "B123"
+};
+
+function login() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+
+  if (validDoctors[user] && validDoctors[user] === pass) {
+    doctorName = user;
+    document.getElementById("loginSection").classList.remove("visible-section");
+    document.getElementById("formSection").classList.add("visible-section");
+    document.getElementById("toggleHistoryBtn").style.display = "block";
+  } else {
+    alert("Invalid username or password. Only authorized doctors can log in.");
+  }
+}
+  
+
   const ages = Array.from({ length: 100 }, (_, i) => i + 1);
   const ageSelect = document.getElementById("patientAge");
   ages.forEach(age => {
@@ -243,8 +264,6 @@
  
     },
    
-  
-  
   {
   condition: "Anemia",
   drugs: ["DrugX_Anemia", "DrugY_Anemia"],
@@ -546,7 +565,12 @@
   diet: ["Avoid spicy foods", "Warm fluids", "Fiber-rich meals"]
 }
 
-
+  
+  
+    // 🔁 Add more here if needed up to 100 illnesses
+  ];
+  
+  // Updated symptom support
 const symptomSupport = {
   fever: { drugs: ["Paracetamol"], prescription: "500mg every 6 hours" },
   cold: { drugs: ["Vitamin C"], prescription: "1000mg daily" },
@@ -564,7 +588,7 @@ const symptomSupport = {
   rash: { drugs: ["Antihistamine Cream"], prescription: "Apply twice daily" },
   dizziness: { drugs: ["Meclizine"], prescription: "25mg as needed" }
 };
-
+  
 
   const illnessSelect = document.getElementById("illness");
   illnessData.forEach(entry => {
@@ -573,19 +597,7 @@ const symptomSupport = {
     opt.textContent = entry.condition;
     illnessSelect.appendChild(opt);
   });
-
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-    if (user && pass) {
-      doctorName = user;
-      document.getElementById("loginSection").classList.remove("visible-section");
-      document.getElementById("formSection").classList.add("visible-section");
-      document.getElementById("toggleHistoryBtn").style.display = "block";
-    } else {
-      alert("Enter both username and password");
-    }
-  }
+  
 
   function generatePrescription() {
     const name = document.getElementById("patientName").value;
@@ -600,7 +612,7 @@ const symptomSupport = {
     symptoms.forEach(symptom => {
       if (symptomSupport[symptom]) {
         extraDrugs = extraDrugs.concat(symptomSupport[symptom].drugs);
-        extraPrescriptions.push(${symptomSupport[symptom].drugs.join(", ")}: ${symptomSupport[symptom].prescription});
+        extraPrescriptions.push(`${symptomSupport[symptom].drugs.join(", ")}: ${symptomSupport[symptom].prescription}`);
       }
     });
 
@@ -661,7 +673,7 @@ const symptomSupport = {
 
   function addToHistory(patient, illness) {
     const li = document.createElement("li");
-    li.textContent = ${patient} - ${illness};
+    li.textContent = `${patient} - ${illness}`;
     document.getElementById("historyList").appendChild(li);
   }
 
