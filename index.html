@@ -245,308 +245,199 @@
     ageSelect.appendChild(opt);
   });
 
-  const illnessData = [
-    { condition: "Malaria",
-      drugs: ["Artemether", "Lumefantrine"],
-      prescription: "Take Artemether/Lumefantrine 80/480mg twice daily for 3 days",
-      diet: ["Plenty of fluids", "Fruits", "Light meals"]
-    },
-    { condition: "Typhoid",
-      drugs: ["Ciprofloxacin", "Paracetamol"],
-      prescription: "Ciprofloxacin 500mg twice daily for 7 days",
-      diet: ["Boiled foods", "Hydration", "Avoid spicy meals"]
-    },
-    { condition: "Asthma",
-      drugs: ["Salbutamol", "Prednisolone"],
-      prescription: "Use Salbutamol inhaler every 6 hours",
-      diet: ["Avoid allergens", "Eat omega-3 rich foods"]
-    },
-    { condition: "Diabetes",
-      drugs: ["Metformin", "Insulin"],
-      prescription: "Metformin 500mg twice daily",
-      diet: ["Low sugar", "High fiber diet"]
-    },
-    { condition: "Hypertension",
-      drugs: ["Lisinopril", "Amlodipine"],
-      prescription: "Lisinopril 10mg once daily",
-      diet: ["Low salt", "More vegetables"]
-    },
-    { condition: "Ulcer",
-      drugs: ["Omeprazole", "Antacids"],
-      prescription: "Omeprazole 20mg before breakfast for 14 days",
-      diet: ["No spicy food", "Frequent small meals"]
-    },
-    { condition: "Hepatitis B",
-      drugs: ["Tenofovir", "Entecavir"],
-      prescription: "Tenofovir 300mg daily",
-      diet: ["Low-fat diet", "Plenty of fruits"]
-    },
-    { condition: "COVID-19",
-      drugs: ["Paracetamol", "Vitamin C", "Zinc"],
-      prescription: "Paracetamol 500mg every 6 hours as needed",
-      diet: ["Fruits", "Plenty of rest", "Hydration"]
-    },
-    { condition: "Tuberculosis",
-      drugs: ["Rifampicin", "Isoniazid"],
-      prescription: "Standard 6-month TB therapy",
-      diet: ["High protein", "Vitamin supplements"]
-    },
-    { condition: "Pneumonia",
-      drugs: ["Azithromycin", "Amoxicillin"],
-      prescription: "Azithromycin 500mg once daily for 3 days",
-      diet: ["Warm fluids", "Soft food"]
-    },
-    { condition: "Anemia",
-      drugs: ["DrugX_Anemia", "DrugY_Anemia"],
-      prescription: "Take DrugX and DrugY for 3 days as prescribed.",
-      diet: ["Avoid spicy food", "Hydration", "Vegetables"]
-    },
-    { condition: "Arthritis",
-      drugs: ["DrugX_Arthritis", "DrugY_Arthritis"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Low salt", "High protein", "Fruits"]
-    },
-    { condition: "Cataract",
-      drugs: ["DrugX_Cataract", "DrugY_Cataract"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Avoid spicy food", "Low salt", "Omega-3"]
-    },
-    { condition: "Glaucoma",
-      drugs: ["DrugX_Glaucoma", "DrugY_Glaucoma"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Vegetables", "Avoid spicy food", "Fiber-rich meals"]
-    },
-    { condition: "Sinusitis",
-      drugs: ["DrugX_Sinusitis", "DrugY_Sinusitis"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Omega-3", "High protein", "Fruits"]
-    },
-    { condition: "Tonsillitis",
-      drugs: ["DrugX_Tonsillitis", "DrugY_Tonsillitis"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Hydration", "Fruits", "Vegetables"]
-    },
-    { condition: "Appendicitis",
-      drugs: ["DrugX_Appendicitis", "DrugY_Appendicitis"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Avoid spicy food", "Fruits", "Low salt"]
-    },
-    { condition: "Hernia",
-      drugs: ["DrugX_Hernia", "DrugY_Hernia"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Hydration", "Vegetables", "Low fat"]
-    },
-    { condition: "Depression",
-      drugs: ["DrugX_Depression", "DrugY_Depression"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Omega-3", "Fruits", "Low salt"]
-    },
-    { condition: "Anxiety",
-      drugs: ["DrugX_Anxiety", "DrugY_Anxiety"],
-      prescription: "Take DrugX and DrugY for 8 days as prescribed.",
-      diet: ["Fruits", "Hydration", "Avoid spicy food"]
-    },
-    { condition: "Insomnia",
-      drugs: ["DrugX_Insomnia", "DrugY_Insomnia"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Low salt", "Hydration", "Omega-3"]
-    },
-    { condition: "Allergy",
-      drugs: ["DrugX_Allergy", "DrugY_Allergy"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Fiber-rich meals", "Hydration", "Vegetables"]
-    },
-    { condition: "Eczema",
-      drugs: ["DrugX_Eczema", "DrugY_Eczema"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Vegetables", "Omega-3", "Low salt"]
-    },
-    { condition: "Psoriasis",
-      drugs: ["DrugX_Psoriasis", "DrugY_Psoriasis"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Low fat", "Hydration", "Avoid spicy food"]
-    },
-    { condition: "Gonorrhea",
-      drugs: ["DrugX_Gonorrhea", "DrugY_Gonorrhea"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Vegetables", "Fruits", "Hydration"]
-    },
-    { condition: "Syphilis",
-      drugs: ["DrugX_Syphilis", "DrugY_Syphilis"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Hydration", "Low salt", "Fruits"]
-    },
-    { condition: "UTI",
-      drugs: ["DrugX_UTI", "DrugY_UTI"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Hydration", "Low salt", "Vegetables"]
-    },
-    { condition: "Kidney Stones",
-      drugs: ["DrugX_KidneyStones", "DrugY_KidneyStones"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Plenty of fluids", "Avoid spicy food", "Low fat"]
-    },
-    { condition: "Prostate Enlargement",
-      drugs: ["DrugX_ProstateEnlargement", "DrugY_ProstateEnlargement"],
-      prescription: "Take DrugX and DrugY for 5 days as prescribed.",
-      diet: ["Hydration", "Vegetables", "Omega-3"]
-    },
-    { condition: "Menstrual Pain",
-      drugs: ["DrugX_MenstrualPain", "DrugY_MenstrualPain"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Fruits", "Warm fluids", "Low salt"]
-    },
-    { condition: "Fibroids",
-      drugs: ["DrugX_Fibroids", "DrugY_Fibroids"],
-      prescription: "Take DrugX and DrugY for 8 days as prescribed.",
-      diet: ["Hydration", "Low fat", "Vegetables"]
-    },
-    { condition: "Ovarian Cyst",
-      drugs: ["DrugX_OvarianCyst", "DrugY_OvarianCyst"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Fruits", "Fiber-rich meals", "Low salt"]
-    },
-    { condition: "Astigmatism",
-      drugs: ["DrugX_Astigmatism", "DrugY_Astigmatism"],
-      prescription: "Take DrugX and DrugY for 5 days as prescribed.",
-      diet: ["Omega-3", "Low fat", "Vegetables"]
-    },
-    { condition: "Ear Infection",
-      drugs: ["DrugX_EarInfection", "DrugY_EarInfection"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Fruits", "Vegetables", "Hydration"]
-    },
-    { condition: "Toothache",
-      drugs: ["DrugX_Toothache", "DrugY_Toothache"],
-      prescription: "Take DrugX and DrugY for 3 days as prescribed.",
-      diet: ["Soft foods", "Warm fluids", "Hydration"]
-    },
-    { condition: "Obesity",
-      drugs: ["DrugX_Obesity", "DrugY_Obesity"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Low fat", "High protein", "Fiber-rich meals"]
-    },
-    { condition: "Back Pain",
-      drugs: ["DrugX_BackPain", "DrugY_BackPain"],
-      prescription: "Take DrugX and DrugY for 5 days as prescribed.",
-      diet: ["Hydration", "Vegetables", "Fruits"]
-    },
-    { condition: "Liver Cirrhosis",
-      drugs: ["DrugX_LiverCirrhosis", "DrugY_LiverCirrhosis"],
-      prescription: "Take DrugX and DrugY for 8 days as prescribed.",
-      diet: ["Low salt", "Fruits", "Hydration"]
-    },
-    { condition: "Gallstones",
-      drugs: ["DrugX_Gallstones", "DrugY_Gallstones"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Low fat", "Vegetables", "Hydration"]
-    },
-    { condition: "Pancreatitis",
-      drugs: ["DrugX_Pancreatitis", "DrugY_Pancreatitis"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Hydration", "Low salt", "Omega-3"]
-    },
-    { condition: "Scabies",
-      drugs: ["DrugX_Scabies", "DrugY_Scabies"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["High protein", "Low fat", "Fruits"]
-    },
-    { condition: "Ringworm",
-      drugs: ["DrugX_Ringworm", "DrugY_Ringworm"],
-      prescription: "Take DrugX and DrugY for 5 days as prescribed.",
-      diet: ["Vegetables", "Fruits", "Hydration"]
-    },
-    { condition: "Athlete’s Foot",
-      drugs: ["DrugX_AthletesFoot", "DrugY_AthletesFoot"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Omega-3", "Vegetables", "Fruits"]
-    },
-    { condition: "Conjunctivitis",
-      drugs: ["DrugX_Conjunctivitis", "DrugY_Conjunctivitis"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Fruits", "Hydration", "Low salt"]
-    },
-    { condition: "Warts",
-      drugs: ["DrugX_Warts", "DrugY_Warts"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Omega-3", "Vegetables", "Fiber-rich meals"]
-    },
-    { condition: "Low Blood Pressure",
-      drugs: ["DrugX_LowBP", "DrugY_LowBP"],
-      prescription: "Take DrugX and DrugY for 5 days as prescribed.",
-      diet: ["High salt", "Fruits", "Hydration"]
-    },
-    { condition: "High Cholesterol",
-      drugs: ["DrugX_HighCholesterol", "DrugY_HighCholesterol"],
-      prescription: "Take DrugX and DrugY for 8 days as prescribed.",
-      diet: ["Low fat", "Fruits", "Fiber-rich meals"]
-    },
-    { condition: "Cough",
-      drugs: ["DrugX_Cough", "DrugY_Cough"],
-      prescription: "Take DrugX and DrugY for 3 days as prescribed.",
-      diet: ["Warm fluids", "Hydration", "Fruits"]
-    },
-    { condition: "Cold",
-      drugs: ["DrugX_Cold", "DrugY_Cold"],
-      prescription: "Take DrugX and DrugY for 4 days as prescribed.",
-      diet: ["Vitamin C rich foods", "Fruits", "Warm soups"]
-    },
-    { condition: "Jaundice",
-      drugs: ["DrugX_Jaundice", "DrugY_Jaundice"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Avoid alcohol", "Low fat", "Fruits"]
-    },
-    { condition: "Malnutrition",
-      drugs: ["DrugX_Malnutrition", "DrugY_Malnutrition"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["High protein", "Multivitamins", "Fruits"]
-    },
-    { condition: "Mumps",
-      drugs: ["DrugX_Mumps", "DrugY_Mumps"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Hydration", "Soft foods", "Fruits"]
-    },
-    { condition: "Tetanus",
-      drugs: ["DrugX_Tetanus", "DrugY_Tetanus"],
-      prescription: "Take DrugX and DrugY for 8 days as prescribed.",
-      diet: ["High protein", "Hydration", "Vegetables"]
-    },
-    { condition: "Polio",
-      drugs: ["DrugX_Polio", "DrugY_Polio"],
-      prescription: "Take DrugX and DrugY for 9 days as prescribed.",
-      diet: ["Protein-rich", "Calcium", "Vegetables"]
-    },
-    { condition: "Rabies",
-      drugs: ["DrugX_Rabies", "DrugY_Rabies"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Fluids", "Balanced diet", "Fruits"]
-    },
-    { condition: "Lupus",
-      drugs: ["DrugX_Lupus", "DrugY_Lupus"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Omega-3", "Fruits", "Vegetables"]
-    },
-    { condition: "Multiple Sclerosis",
-      drugs: ["DrugX_MS", "DrugY_MS"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Low salt", "Hydration", "Vegetables"]
-    },
-    { condition: "Leukemia",
-      drugs: ["DrugX_Leukemia", "DrugY_Leukemia"],
-      prescription: "Take DrugX and DrugY for 10 days as prescribed.",
-      diet: ["Hydration", "Vegetables", "Low fat"]
-    },
-    { condition: "Vertigo",
-      drugs: ["DrugX_Vertigo", "DrugY_Vertigo"],
-      prescription: "Take DrugX and DrugY for 6 days as prescribed.",
-      diet: ["Omega-3", "Hydration", "Fruits"]
-    },
-    { condition: "Gastritis",
-      drugs: ["DrugX_Gastritis", "DrugY_Gastritis"],
-      prescription: "Take DrugX and DrugY for 7 days as prescribed.",
-      diet: ["Avoid spicy foods", "Warm fluids", "Fiber-rich meals"]
-    }
-  ];
+
+const illnessData = [
+  { condition: "Malaria",
+    drugs: ["Artemether", "Lumefantrine"],
+    prescription: "Artemether/Lumefantrine 20/120mg, 4 tablets twice daily for 3 days",
+    diet: ["Plenty of fluids", "Fruits", "Light meals"]
+  },
+  { condition: "Typhoid",
+    drugs: ["Ciprofloxacin", "Paracetamol"],
+    prescription: "Ciprofloxacin 500mg twice daily for 7 days; Paracetamol 500mg for fever as needed",
+    diet: ["Boiled foods", "Hydration", "Avoid spicy meals"]
+  },
+  { condition: "Asthma",
+    drugs: ["Salbutamol inhaler", "Prednisolone"],
+    prescription: "Use Salbutamol inhaler 2 puffs every 6 hours as needed; Prednisolone as directed",
+    diet: ["Avoid allergens", "Eat omega-3 rich foods"]
+  },
+  { condition: "Diabetes",
+    drugs: ["Metformin", "Insulin glargine"],
+    prescription: "Metformin 500mg twice daily; adjust insulin as prescribed",
+    diet: ["Low sugar", "High fiber diet"]
+  },
+  { condition: "Hypertension",
+    drugs: ["Lisinopril", "Amlodipine"],
+    prescription: "Lisinopril 10mg once daily; Amlodipine 5mg once daily",
+    diet: ["Low salt", "More vegetables"]
+  },
+  { condition: "Ulcer",
+    drugs: ["Omeprazole", "Aluminium hydroxide antacid"],
+    prescription: "Omeprazole 20mg once daily before breakfast for 14 days",
+    diet: ["No spicy food", "Frequent small meals"]
+  },
+  { condition: "Hepatitis B",
+    drugs: ["Tenofovir disoproxil", "Entecavir"],
+    prescription: "Tenofovir 300mg once daily or Entecavir 0.5mg daily as directed",
+    diet: ["Low-fat diet", "Plenty of fruits"]
+  },
+  { condition: "COVID-19",
+    drugs: ["Paracetamol", "Vitamin C", "Zinc"],
+    prescription: "Paracetamol 500mg every 6 hours for fever; supportive care",
+    diet: ["Fruits", "Plenty of rest", "Hydration"]
+  },
+  { condition: "Tuberculosis",
+    drugs: ["Rifampicin", "Isoniazid", "Pyrazinamide", "Ethambutol"],
+    prescription: "Standard 4-drug TB therapy for 2 months, then 2-drug continuation for 4 months",
+    diet: ["High protein", "Vitamin supplements"]
+  },
+  { condition: "Pneumonia",
+    drugs: ["Azithromycin", "Amoxicillin"],
+    prescription: "Azithromycin 500mg once daily for 3 days or Amoxicillin 500mg three times daily for 7 days",
+    diet: ["Warm fluids", "Soft food"]
+  },
+  { condition: "Anemia",
+    drugs: ["Ferrous sulfate", "Folic acid"],
+    prescription: "Ferrous sulfate 325mg once or twice daily; Folic acid 5mg daily",
+    diet: ["Iron-rich foods", "Vegetables", "Vitamin C"]
+  },
+  { condition: "Arthritis",
+    drugs: ["Ibuprofen", "Methotrexate (if chronic)"],
+    prescription: "Ibuprofen 400mg every 8 hours with food; Disease-modifying drugs as prescribed",
+    diet: ["Low salt", "High protein", "Fruits"]
+  },
+  { condition: "Cataract",
+    drugs: ["Topical NSAID eye drops", "Antibiotic eye drops (post-op)"],
+    prescription: "Eye drops as directed after surgery",
+    diet: ["Balanced diet", "Omega-3"]
+  },
+  { condition: "Glaucoma",
+    drugs: ["Timolol eye drops", "Latanoprost"],
+    prescription: "Timolol 1 drop twice daily; Latanoprost 1 drop at night",
+    diet: ["Vegetables", "Avoid high caffeine"]
+  },
+  { condition: "Sinusitis",
+    drugs: ["Amoxicillin-clavulanate", "Nasal saline"],
+    prescription: "Amoxicillin-clavulanate 875/125mg twice daily for 7-10 days",
+    diet: ["Warm fluids", "Fruits"]
+  },
+  { condition: "Tonsillitis",
+    drugs: ["Penicillin V", "Ibuprofen"],
+    prescription: "Penicillin V 500mg every 6 hours for 10 days; Ibuprofen for pain",
+    diet: ["Soft foods", "Hydration"]
+  },
+  { condition: "Appendicitis",
+    drugs: ["Ceftriaxone", "Metronidazole (pre/post-op)"],
+    prescription: "IV antibiotics as per surgical protocol",
+    diet: ["Nil by mouth pre-op; balanced after recovery"]
+  },
+  { condition: "Hernia",
+    drugs: ["Analgesics (e.g., Paracetamol)"],
+    prescription: "Pain relief as required; surgical repair is definitive",
+    diet: ["Light meals post-op", "Hydration"]
+  },
+  { condition: "Depression",
+    drugs: ["Fluoxetine", "Sertraline"],
+    prescription: "Fluoxetine 20mg daily or Sertraline 50mg daily",
+    diet: ["Balanced diet", "Omega-3"]
+  },
+  { condition: "Anxiety",
+    drugs: ["Buspirone", "Escitalopram"],
+    prescription: "Buspirone 10mg twice daily or Escitalopram 10mg daily",
+    diet: ["Fruits", "Hydration"]
+  },
+  { condition: "Insomnia",
+    drugs: ["Zolpidem", "Melatonin"],
+    prescription: "Zolpidem 5-10mg at bedtime; Melatonin as needed",
+    diet: ["Light evening meals", "Avoid caffeine"]
+  },
+  { condition: "Allergy",
+    drugs: ["Loratadine", "Cetirizine"],
+    prescription: "Loratadine 10mg once daily or Cetirizine 10mg once daily",
+    diet: ["Avoid allergens", "Hydration"]
+  },
+  { condition: "Eczema",
+    drugs: ["Topical corticosteroid cream", "Moisturizer"],
+    prescription: "Apply topical steroids as prescribed; moisturize frequently",
+    diet: ["Balanced diet", "Omega-3"]
+  },
+  { condition: "Psoriasis",
+    drugs: ["Topical corticosteroid", "Methotrexate (systemic)"],
+    prescription: "Topical therapy for mild; systemic therapy if severe",
+    diet: ["Low fat", "Hydration"]
+  },
+  { condition: "Gonorrhea",
+    drugs: ["Ceftriaxone"],
+    prescription: "Ceftriaxone 500mg intramuscular single dose",
+    diet: ["Hydration", "Fruits"]
+  },
+  { condition: "Syphilis",
+    drugs: ["Benzathine penicillin G"],
+    prescription: "Benzathine penicillin G 2.4 million units intramuscular single dose",
+    diet: ["Hydration", "Low salt"]
+  },
+  { condition: "UTI",
+    drugs: ["Nitrofurantoin", "Cefuroxime"],
+    prescription: "Nitrofurantoin 100mg twice daily for 5 days",
+    diet: ["Hydration", "Vegetables"]
+  },
+  { condition: "Kidney Stones",
+    drugs: ["Tamsulosin", "Pain relief (Ibuprofen)"],
+    prescription: "Tamsulosin 0.4mg once daily; analgesics as needed",
+    diet: ["Plenty of fluids", "Low salt"]
+  },
+  { condition: "Prostate Enlargement",
+    drugs: ["Tamsulosin", "Finasteride"],
+    prescription: "Tamsulosin 0.4mg daily; Finasteride 5mg daily",
+    diet: ["Vegetables", "Hydration"]
+  },
+  { condition: "Menstrual Pain",
+    drugs: ["Ibuprofen", "Mefenamic acid"],
+    prescription: "Ibuprofen 400mg every 8 hours as needed",
+    diet: ["Warm fluids", "Fruits"]
+  },
+  { condition: "Fibroids",
+    drugs: ["Tranexamic acid", "Leuprolide (if severe)"],
+    prescription: "Tranexamic acid during heavy bleeding; surgical referral if indicated",
+    diet: ["Balanced diet", "Hydration"]
+  },
+  { condition: "Ovarian Cyst",
+    drugs: ["Analgesics", "Hormonal therapy (as advised)"],
+    prescription: "Pain relief and hormonal therapy if indicated",
+    diet: ["Fiber-rich meals", "Fruits"]
+  },
+  { condition: "Ear Infection",
+    drugs: ["Amoxicillin", "Ofloxacin ear drops"],
+    prescription: "Amoxicillin 500mg three times daily for 7 days; ear drops as directed",
+    diet: ["Hydration", "Soft foods"]
+  },
+  { condition: "Toothache",
+    drugs: ["Ibuprofen", "Amoxicillin (if infection)"],
+    prescription: "Ibuprofen 400mg as needed; Amoxicillin 500mg three times daily for infection",
+    diet: ["Soft foods", "Warm fluids"]
+  },
+  { condition: "Obesity",
+    drugs: ["Orlistat"],
+    prescription: "Orlistat 120mg three times daily with meals",
+    diet: ["Low fat", "High fiber"]
+  },
+  { condition: "Back Pain",
+    drugs: ["Ibuprofen", "Paracetamol"],
+    prescription: "Ibuprofen 400mg every 8 hours with food",
+    diet: ["Balanced meals", "Hydration"]
+  },
+  { condition: "Scabies",
+    drugs: ["Permethrin cream"],
+    prescription: "Apply Permethrin cream overnight and repeat in 7 days",
+    diet: ["Balanced diet"]
+  },
+  { condition: "Ringworm",
+    drugs: ["Clotrimazole cream"],
+    prescription: "Apply Clotrimazole twice daily for 2-4 weeks",
+    diet: ["Balanced diet"]
+  }
+];  
 
   const illnessSelect = document.getElementById("illness");
   illnessData.forEach(entry => {
