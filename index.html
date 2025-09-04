@@ -208,7 +208,7 @@
             <button class="btn-danger" onclick="resetForm()">Reset</button>
  <button class="btn-danger" onclick="goTo('welcomeSection')">Logout</button>
           </div>
-          <p class="muted">If the patient exists, they’ll receive this prescription in their inbox automatically.</p>
+          <p class="muted">Carefuly select the patient to avoid wrong prescription</p>
         </div>
         <div class="card">
           <h3>Quick Symptom Helpers</h3>
@@ -285,7 +285,7 @@
           <div>
             <label>Choose Doctor</label>
             <select id="patientDoctorSelect"></select>
-            <textarea id="patientMsgText" placeholder="Describe how you feel..."></textarea>
+            <textarea id="patientMsgText" placeholder="Describe how you are feeling, your age, days of illiness and additional symptoms..."></textarea>
             <input type="file" id="patientImage" accept="image/*" />
             <div class="btn-row">
               <button onclick="patientSend()">Send to Doctor</button>
