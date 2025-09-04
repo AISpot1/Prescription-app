@@ -122,6 +122,12 @@
     .role-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
     .hide{display:none!important}
     @media (max-width:760px){ .grid-2{grid-template-columns:1fr} }
+  .role-card {
+      width: 200px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s;
   </style>
 </head>
 <body>
@@ -139,16 +145,19 @@
 
   <!-- ============== WELCOME / ROLE PICKER ============== -->
   <div class="container section visible" id="welcomeSection">
-   <center> <h1>Welcome Healthcare Management System</h1>
+   <center> <h1>Welcome DP System</h1>
     <p class="muted">Select your role to continue.</p></center>
     <div class="role-cards">
       <div class="role-card" onclick="goTo('patientAuthSection')">
-        <h3>I'm a Patient</h3>
+        <h4>I'm a Patient</h4>
+<div class="role-icon">👤</div>
+ 
         <p>Send symptoms & photos to a doctor, view past records, and give feedback on prescriptions.</p>
        
       </div>
       <div class="role-card" onclick="goTo('doctorLoginSection')">
-        <h3>I'm a Doctor</h3>
+        <h4>I'm a Doctor</h4>
+<div class="role-icon">👨‍⚕️</div>
         <p>Review patient messages, prescribe, and manage history.</p>
       </div>
     </div>
