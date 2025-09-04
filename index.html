@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,16 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doctors Drug Prescription System</title>
   <style>
+    :root{
+      --brand:#007BFF;
+      --bg:#f0f4f8;
+      --card:#fff;
+      --muted:#666;
+      --danger:#f44336;
+    }
+    *{box-sizing:border-box}
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f0f4f8;
-      display: flex;
+      background: var(--bg);
+      display: block;
+      min-height:100vh;
     }
+    .container {
+      width: min(920px, 94vw);
+      margin: 48px auto;
+      padding: 20px;
+      background: var(--card);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border-radius: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    h1,h2,h3{color:var(--brand);margin:0 0 10px}
+    .muted{color:var(--muted);font-size:12px}
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 10px;
+      border: 1px solid #d7dce2;
+      border-radius: 8px;
+      background:#fff;
+    }
+    textarea{min-height:100px}
+    button {
+      background: var(--brand);
+      color:#fff;
+      font-weight:600;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover{opacity:.95}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn-ghost{background:transparent;color:var(--brand);border:1px solid var(--brand)}
+    .btn-danger{background:var(--danger)}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns: repeat(2,1fr)}
+    .card{background:#fff;border:1px solid #e7ebf0;border-radius:12px;padding:12px}
+    .row{display:flex;gap:12px;align-items:center}
+    .pill{background:#eef5ff;color:#2d68ff;border:1px solid #cfe0ff;padding:2px 8px;border-radius:999px;font-size:12px}
+    .section{display:none}
+    .section.visible{display:block}
+    .toolbar{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .toolbar .right{display:flex;gap:8px}
+    .list{list-style:none;padding:0;margin:0}
+    .list li{padding:10px;border:1px solid #e7ebf0;border-radius:10px;margin-bottom:8px;cursor:pointer;background:#fff}
+    .list li:hover{background:#fafcff}
+    .thumb{max-width:100%;border:1px solid #eee;border-radius:8px}
+    .tabs{display:flex;gap:6px;margin:10px 0 6px}
+    .tab{padding:8px 12px;border:1px solid #e7ebf0;border-radius:999px;background:#fff;cursor:pointer}
+    .tab.active{background:#eef5ff;border-color:#cfe0ff;color:#2d68ff}
+    .inline{display:inline-flex;gap:8px;align-items:center}
+    .sticky-top{position:sticky;top:-8px;background:#fff;z-index:2;padding-top:4px}
+    /* Sidebar (doctor history) */
     .sidebar {
       width: 280px;
-      background: #007BFF;
+      background: var(--brand);
       color: white;
       height: 100vh;
       padding: 16px;
@@ -25,147 +84,50 @@
       transform: translateX(-100%);
       position: fixed;
       z-index: 999;
+      left:0; top:0;
     }
-    .sidebar.visible {
-      transform: translateX(0);
-    }
-    .sidebar h3 {
-      margin: 0 0 10px 0;
-    }
-    .sidebar .actions {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
+    .sidebar.visible { transform: translateX(0); }
+    .sidebar h3 { margin: 0 0 10px 0; }
+    .sidebar .actions { display: flex; gap: 8px; margin-bottom: 12px; }
     .sidebar button.small {
-      width: 100%;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-weight: 600;
+      width: 100%; padding: 8px; border: none; border-radius: 6px; cursor: pointer;
+      background: rgba(255,255,255,0.2); color: #fff; font-weight: 600;
     }
-    .sidebar .search {
-      width: 100%;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+    .sidebar .search { width: 100%; padding: 8px; border: none; border-radius: 6px; margin-bottom: 10px; }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
     .sidebar li {
-      margin-bottom: 10px;
-      font-size: 13px;
-      padding: 8px;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.12);
-      cursor: pointer;
-    }
-    .container {
-      flex: 1;
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 20px;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-top: 40px;
-      border-radius: 10px;
-      position: relative;
-      z-index: 1;
-    }
-    h2 {
-      text-align: center;
-      color: #007BFF;
-    }
-    input, select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-    textarea { min-height: 90px; }
-    button {
-      background: #007BFF;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-    }
-    button:hover { opacity: 0.95; }
-    .reset {
-      background: #f44336;
-      margin-top: 5px;
-    }
-    .login, .form-section {
-      display: none;
-    }
-    .visible-section {
-      display: block;
+      margin-bottom: 10px; font-size: 13px; padding: 8px; border-radius: 6px;
+      background: rgba(255,255,255,0.12); cursor: pointer;
     }
     .toggle-history {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: #007BFF;
-      color: white;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      z-index: 1000;
-      display: none;
+      position: fixed; top: 10px; left: 10px;
+      background: var(--brand); color: white; padding: 6px 10px; border: none; border-radius: 6px;
+      cursor: pointer; z-index: 1000; display: none;
     }
+    /* Modal */
     .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1001;
-      padding: 10px;
-      box-sizing: border-box;
+      display: none; justify-content: center; align-items: center;
+      z-index: 1001; padding: 10px;
     }
     .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 720px;
-      position: relative;
+      background: white; padding: 20px; border-radius: 12px; width: min(720px,94vw); position: relative;
     }
-    .modal-content .btn-group {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-      color: red;
-    }
-    .muted {
-      color: #666;
-      font-size: 12px;
-    }
+    .modal-content .btn-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; color: var(--danger); }
+    /* Welcome role cards */
+    .role-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+    .role-card{padding:18px;border:1px solid #e7ebf0;border-radius:14px;background:#fff;cursor:pointer;transition:.2s}
+    .role-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.06)}
+    .hide{display:none!important}
+    @media (max-width:760px){ .grid-2{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
   <button class="toggle-history" id="toggleHistoryBtn" onclick="toggleSidebar()">📁 History</button>
 
+  <!-- Sidebar (Doctor's history) -->
   <div class="sidebar" id="sidebar">
     <h3>Prescription History</h3>
     <div class="actions">
@@ -175,29 +137,200 @@
     <ul id="historyList"></ul>
   </div>
 
-  <div class="container login visible-section" id="loginSection">
-    <h2>Doctor Login System</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
+  <!-- ============== WELCOME / ROLE PICKER ============== -->
+  <div class="container section visible" id="welcomeSection">
+   <center> <h1>Welcome Healthcare Management System</h1>
+    <p class="muted">Select your role to continue.</p></center>
+    <div class="role-cards">
+      <div class="role-card" onclick="goTo('patientAuthSection')">
+        <h3>I'm a Patient</h3>
+        <p>Send symptoms & photos to a doctor, view past records, and give feedback on prescriptions.</p>
+       
+      </div>
+      <div class="role-card" onclick="goTo('doctorLoginSection')">
+        <h3>I'm a Doctor</h3>
+        <p>Review patient messages, prescribe, and manage history.</p>
+      </div>
+    </div>
   </div>
 
-  <div class="container form-section" id="formSection">
-    <h2>💊 Patient Prescription Form</h2>
-    <div class="muted" id="loggedInAs"></div>
-    <input type="text" id="patientName" placeholder="Patient Name" />
-    <select id="patientAge">
-      <option value="">Select Age</option>
-    </select>
-    <select id="illness">
-      <option value="">Select Illness</option>
-    </select>
-    <input type="number" id="days" placeholder="Days of Sickness" min="0" />
-    <textarea id="symptoms" placeholder="Additional Symptoms (e.g. fever, cough). Separate by comma or space."></textarea>
-    <button onclick="generatePrescription()">Prescribe</button>
-    <button class="reset" onclick="resetForm()">Reset</button>
+  <!-- ============== DOCTOR LOGIN ============== -->
+  <div class="container section" id="doctorLoginSection">
+    <h2>Doctor Login</h2>
+    <div class="grid grid-2">
+      <div>
+        <input type="text" id="docUsername" placeholder="Doctor Name " />
+        <input type="password" id="docPassword" placeholder="Password" />
+        <div class="btn-row">
+          <button onclick="loginDoctor()">Login</button>
+          <button class="btn-ghost" onclick="goTo('welcomeSection')">Back</button>
+        </div>
+       
+      </div>
+      <div class="card">
+        <h3 class="inline">Inbox Preview <span class="pill">New</span></h3>
+        <p class="muted">After login, you’ll see messages from your patients here.</p>
+      </div>
+    </div>
   </div>
 
+  <!-- ============== DOCTOR DASHBOARD (FORM + INBOX) ============== -->
+  <div class="container section" id="doctorSection">
+    <div class="sticky-top">
+      <h2>💊 Patient Prescription Form</h2>
+      <div class="muted" id="loggedInAs"></div>
+      <div class="tabs">
+        <div id="tabDocForm" class="tab active" onclick="switchDoctorTab('form')">Prescription Form</div>
+        <div id="tabDocInbox" class="tab" onclick="switchDoctorTab('inbox')">Patient Inbox</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div id="doctorFormPanel">
+      <div class="grid grid-2">
+        <div>
+          <input type="text" id="patientName" placeholder="Patient Name (must match patient account to send)" />
+          <select id="patientAge"><option value="">Select Age</option></select>
+          <select id="illness"><option value="">Select Illness</option></select>
+          <input type="number" id="days" placeholder="Days of Sickness" min="0" />
+          <textarea id="symptoms" placeholder="Additional Symptoms (e.g. fever, cough). Separate by comma or space."></textarea>
+          <div class="btn-row">
+            <button onclick="generatePrescription()">Prescribe</button>
+            <button class="btn-danger" onclick="resetForm()">Reset</button>
+ <button class="btn-danger" onclick="goTo('welcomeSection')">Logout</button>
+          </div>
+          <p class="muted">If the patient exists, they’ll receive this prescription in their inbox automatically.</p>
+        </div>
+        <div class="card">
+          <h3>Quick Symptom Helpers</h3>
+          <p class="muted">Add words like: fever, cold, headache, cough, nausea, diarrhea, etc.</p>
+          <ul class="list" id="helperList"></ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Inbox -->
+    <div id="doctorInboxPanel" class="hide">
+      <div class="toolbar">
+        <h3>Messages from Patients</h3>
+        <div class="right">
+          <input id="docInboxSearch" placeholder="Search by patient..." oninput="renderDoctorInbox()">
+          <button class="btn-ghost" onclick="exportJSON()"></button>
+        </div>
+      </div>
+      <ul class="list" id="doctorInboxList"></ul>
+      <div id="doctorChatArea" class="card hide">
+        <div id="doctorChatHeader" class="row"></div>
+        <div id="doctorChatThread" style="max-height:320px;overflow:auto;margin:8px 0;padding-right:6px"></div>
+        <textarea id="doctorReplyText" placeholder="Reply to patient..."></textarea>
+        <div class="btn-row">
+          <button onclick="doctorSendReply()">Send Reply</button>
+          <button class="btn-ghost" onclick="closeDoctorChat()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== PATIENT AUTH (LOGIN / SIGNUP TABS) ============== -->
+  <div class="container section" id="patientAuthSection">
+    <h2>Patient Access</h2>
+    <div class="tabs">
+      <div id="tabLogin" class="tab active" onclick="switchPatientAuth('login')">Login</div>
+      <div id="tabSignup" class="tab" onclick="switchPatientAuth('signup')">Sign up</div>
+    </div>
+    <div id="patientLoginPanel">
+      <input type="text" id="patientLoginName" placeholder="Username" />
+      <input type="password" id="patientLoginPass" placeholder="Password" />
+      <div class="btn-row">
+        <button onclick="loginPatient()">Login</button>
+        <button class="btn-ghost" onclick="goTo('welcomeSection')">Back</button>
+      </div>
+      
+    </div>
+    <div id="patientSignupPanel" class="hide">
+      <input type="text" id="signupName" placeholder="Choose a username" />
+      <input type="password" id="signupPass" placeholder="Choose a password" />
+      <div class="btn-row">
+        <button onclick="signupPatient()">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== PATIENT DASHBOARD ============== -->
+  <div class="container section" id="patientSection">
+    <div class="sticky-top">
+      <h2>Patient Portal</h2>
+      <div class="muted" id="patientLoggedInAs"></div>
+      <div class="tabs">
+        <div id="tabPMsgs" class="tab active" onclick="switchPatientTab('messages')">Messages</div>
+        <div id="tabPRecords" class="tab" onclick="switchPatientTab('records')">My Records</div>
+        <div id="tabPProfile" class="tab" onclick="switchPatientTab('profile')">Profile</div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="patientMessagesPanel">
+      <div class="card">
+        <div class="grid grid-2">
+          <div>
+            <label>Choose Doctor</label>
+            <select id="patientDoctorSelect"></select>
+            <textarea id="patientMsgText" placeholder="Describe how you feel..."></textarea>
+            <input type="file" id="patientImage" accept="image/*" />
+            <div class="btn-row">
+              <button onclick="patientSend()">Send to Doctor</button>
+              <button class="btn-ghost" onclick="clearPatientMsg()">Clear</button>
+
+            </div>
+            <p class="muted">You can attach a picture (e.g., scan/photo) to help the doctor assess your case.</p>
+          </div>
+          <div>
+            <h3>My Conversations</h3>
+            <ul class="list" id="patientThreads"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="patientChatArea" class="card hide">
+        <div id="patientChatHeader" class="row"></div>
+        <div id="patientChatThread" style="max-height:320px;overflow:auto;margin:8px 0;padding-right:6px"></div>
+        <textarea id="patientReplyText" placeholder="Type a reply / feedback..."></textarea>
+        <div class="btn-row">
+          <button onclick="patientSendReply()">Send</button>
+          <button class="btn-ghost" onclick="closePatientChat()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Records -->
+    <div id="patientRecordsPanel" class="hide">
+      <div class="toolbar">
+        <h3>My Prescription Records</h3>
+        <input id="patientRecordSearch" placeholder="Search by illness..." oninput="renderPatientRecords()">
+      </div>
+      <ul class="list" id="patientRecordsList"></ul>
+    </div>
+
+    <!-- Profile -->
+    <div id="patientProfilePanel" class="hide">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Account</h3>
+          <p class="muted">Change your assigned doctor. This is used as the default when you send messages.</p>
+          <label>Assigned Doctor</label>
+          <select id="patientAssignedDoctor"></select>
+          <div class="btn-row"><button onclick="savePatientProfile()">Save</button></div>
+        </div>
+        <div class="card">
+          <h3>Danger Zone</h3>
+          <button class="btn-danger" onclick="logoutPatient()">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== PRESCRIPTION MODAL (for doctor preview/print/share) ============== -->
   <div class="modal" id="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -210,244 +343,336 @@
   </div>
 
   <script>
-  // ************** AUTH **************
-  let doctorName = "";
+  /*************** PERSISTENCE (JSON in localStorage) ****************/
+  const KEYS = {
+    doctors: "dds_doctors",
+    patients: "dds_patients",
+    messages: "dds_messages",
+    history: "prescriptionHistory" // keep your original key for backward compatibility
+  };
 
-  const validDoctors = {
+  function loadJSON(key, fallback){
+    try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+    catch{ return fallback; }
+  }
+  function saveJSON(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  // Seed doctors + default patient Musa if not present
+  const DEFAULT_DOCTORS = {
     "Dr. Seker": "S123",
     "Dr. Malu":  "M123",
     "Dr. Belo":  "B123"
   };
 
-  function login() {
-    const user = document.getElementById("username").value.trim();
-    const pass = document.getElementById("password").value.trim();
+  function seed(){
+    const docs = loadJSON(KEYS.doctors, null);
+    if(!docs) saveJSON(KEYS.doctors, DEFAULT_DOCTORS);
 
-    if (validDoctors[user] && validDoctors[user] === pass) {
-      doctorName = user;
-      document.getElementById("loginSection").classList.remove("visible-section");
-      document.getElementById("formSection").classList.add("visible-section");
-      document.getElementById("toggleHistoryBtn").style.display = "block";
+    const pats = loadJSON(KEYS.patients, null);
+    if(!pats){
+      saveJSON(KEYS.patients, {
+        "Musa": { password:"M1234", assignedDoctor:"", name:"Musa" }
+      });
+    }
+    if(!localStorage.getItem(KEYS.messages)) saveJSON(KEYS.messages, []);
+    if(!localStorage.getItem(KEYS.history)) saveJSON(KEYS.history, []);
+  }
+  seed();
+
+  /*************** GLOBAL STATE ****************/
+  let doctorName = "";               // logged-in doctor
+  let currentPatientUser = "";       // logged-in patient username
+  let activeDoctorChatWith = "";     // which patient name doctor is chatting with
+  let activePatientChatWith = "";    // which doctor name patient is chatting with
+
+  /*************** NAV *************************/
+  function showSection(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+  }
+  function goTo(id){ showSection(id); }
+
+  /*************** WELCOME *********************/
+  // (Handled by default: welcomeSection shown)
+
+  /*************** DOCTOR AUTH *****************/
+  function loginDoctor(){
+    const docs = loadJSON(KEYS.doctors, {});
+    const u = document.getElementById("docUsername").value.trim();
+    const p = document.getElementById("docPassword").value.trim();
+    if(docs[u] && docs[u] === p){
+      doctorName = u;
       document.getElementById("loggedInAs").textContent = "Logged in as: " + doctorName;
-      renderHistory(); // show any existing history
-    } else {
-      alert("Invalid username or password. Only authorized doctors can log in.");
+      document.getElementById("toggleHistoryBtn").style.display = "block";
+      renderHistory();
+      renderDoctorInbox();
+      showSection('doctorSection');
+      // default tab
+      switchDoctorTab('form');
+    }else{
+      alert("Invalid doctor username or password.");
     }
   }
 
-  // ************** SELECT DATA **************
+  function logoutDoctor(){
+    doctorName = "";
+    document.getElementById("toggleHistoryBtn").style.display = "none";
+    showSection('welcomeSection');
+  }
+
+  /*************** PATIENT AUTH *****************/
+  function switchPatientAuth(which){
+    document.getElementById('tabLogin').classList.toggle('active', which==='login');
+    document.getElementById('tabSignup').classList.toggle('active', which!=='login');
+    document.getElementById('patientLoginPanel').classList.toggle('hide', which!=='login');
+    document.getElementById('patientSignupPanel').classList.toggle('hide', which==='login');
+  }
+
+  function signupPatient(){
+    const name = document.getElementById('signupName').value.trim();
+    const pass = document.getElementById('signupPass').value.trim();
+    if(!name || !pass) return alert("Enter username and password.");
+    const patients = loadJSON(KEYS.patients, {});
+    if(patients[name]) return alert("Username already exists.");
+    patients[name] = {password: pass, assignedDoctor:"", name};
+    saveJSON(KEYS.patients, patients);
+    alert("Account created. You can login now.");
+    switchPatientAuth('login');
+  }
+
+  function loginPatient(){
+    const u = document.getElementById('patientLoginName').value.trim();
+    const p = document.getElementById('patientLoginPass').value.trim();
+    const patients = loadJSON(KEYS.patients, {});
+    if(patients[u] && patients[u].password === p){
+      currentPatientUser = u;
+      document.getElementById('patientLoggedInAs').textContent = "Logged in as: " + currentPatientUser;
+      populateDoctorSelects();
+      renderPatientThreads();
+      renderPatientRecords();
+      loadPatientProfile();
+      showSection('patientSection');
+      switchPatientTab('messages');
+    }else{
+      alert("Invalid patient username or password.");
+    }
+  }
+
+  function logoutPatient(){
+    currentPatientUser = "";
+    showSection('welcomeSection');
+  }
+
+  /*************** COMMON DATA (Age / Illness / Symptom helpers) ***************/
   const ages = Array.from({ length: 100 }, (_, i) => i + 1);
   const ageSelect = document.getElementById("patientAge");
   ages.forEach(age => {
     const opt = document.createElement("option");
-    opt.value = age;
-    opt.textContent = age;
+    opt.value = age; opt.textContent = age;
     ageSelect.appendChild(opt);
   });
 
-
-const illnessData = [
-  { condition: "Malaria",
-    drugs: ["Artemether", "Lumefantrine"],
-    prescription: "Artemether/Lumefantrine 20/120mg, 4 tablets twice daily for 3 days",
-    diet: ["Plenty of fluids", "Fruits", "Light meals"]
-  },
-  { condition: "Typhoid",
-    drugs: ["Ciprofloxacin", "Paracetamol"],
-    prescription: "Ciprofloxacin 500mg twice daily for 7 days; Paracetamol 500mg for fever as needed",
-    diet: ["Boiled foods", "Hydration", "Avoid spicy meals"]
-  },
-  { condition: "Asthma",
-    drugs: ["Salbutamol inhaler", "Prednisolone"],
-    prescription: "Use Salbutamol inhaler 2 puffs every 6 hours as needed; Prednisolone as directed",
-    diet: ["Avoid allergens", "Eat omega-3 rich foods"]
-  },
-  { condition: "Diabetes",
-    drugs: ["Metformin", "Insulin glargine"],
-    prescription: "Metformin 500mg twice daily; adjust insulin as prescribed",
-    diet: ["Low sugar", "High fiber diet"]
-  },
-  { condition: "Hypertension",
-    drugs: ["Lisinopril", "Amlodipine"],
-    prescription: "Lisinopril 10mg once daily; Amlodipine 5mg once daily",
-    diet: ["Low salt", "More vegetables"]
-  },
-  { condition: "Ulcer",
-    drugs: ["Omeprazole", "Aluminium hydroxide antacid"],
-    prescription: "Omeprazole 20mg once daily before breakfast for 14 days",
-    diet: ["No spicy food", "Frequent small meals"]
-  },
-  { condition: "Hepatitis B",
-    drugs: ["Tenofovir disoproxil", "Entecavir"],
-    prescription: "Tenofovir 300mg once daily or Entecavir 0.5mg daily as directed",
-    diet: ["Low-fat diet", "Plenty of fruits"]
-  },
-  { condition: "COVID-19",
-    drugs: ["Paracetamol", "Vitamin C", "Zinc"],
-    prescription: "Paracetamol 500mg every 6 hours for fever; supportive care",
-    diet: ["Fruits", "Plenty of rest", "Hydration"]
-  },
-  { condition: "Tuberculosis",
-    drugs: ["Rifampicin", "Isoniazid", "Pyrazinamide", "Ethambutol"],
-    prescription: "Standard 4-drug TB therapy for 2 months, then 2-drug continuation for 4 months",
-    diet: ["High protein", "Vitamin supplements"]
-  },
-  { condition: "Pneumonia",
-    drugs: ["Azithromycin", "Amoxicillin"],
-    prescription: "Azithromycin 500mg once daily for 3 days or Amoxicillin 500mg three times daily for 7 days",
-    diet: ["Warm fluids", "Soft food"]
-  },
-  { condition: "Anemia",
-    drugs: ["Ferrous sulfate", "Folic acid"],
-    prescription: "Ferrous sulfate 325mg once or twice daily; Folic acid 5mg daily",
-    diet: ["Iron-rich foods", "Vegetables", "Vitamin C"]
-  },
-  { condition: "Arthritis",
-    drugs: ["Ibuprofen", "Methotrexate (if chronic)"],
-    prescription: "Ibuprofen 400mg every 8 hours with food; Disease-modifying drugs as prescribed",
-    diet: ["Low salt", "High protein", "Fruits"]
-  },
-  { condition: "Cataract",
-    drugs: ["Topical NSAID eye drops", "Antibiotic eye drops (post-op)"],
-    prescription: "Eye drops as directed after surgery",
-    diet: ["Balanced diet", "Omega-3"]
-  },
-  { condition: "Glaucoma",
-    drugs: ["Timolol eye drops", "Latanoprost"],
-    prescription: "Timolol 1 drop twice daily; Latanoprost 1 drop at night",
-    diet: ["Vegetables", "Avoid high caffeine"]
-  },
-  { condition: "Sinusitis",
-    drugs: ["Amoxicillin-clavulanate", "Nasal saline"],
-    prescription: "Amoxicillin-clavulanate 875/125mg twice daily for 7-10 days",
-    diet: ["Warm fluids", "Fruits"]
-  },
-  { condition: "Tonsillitis",
-    drugs: ["Penicillin V", "Ibuprofen"],
-    prescription: "Penicillin V 500mg every 6 hours for 10 days; Ibuprofen for pain",
-    diet: ["Soft foods", "Hydration"]
-  },
-  { condition: "Appendicitis",
-    drugs: ["Ceftriaxone", "Metronidazole (pre/post-op)"],
-    prescription: "IV antibiotics as per surgical protocol",
-    diet: ["Nil by mouth pre-op; balanced after recovery"]
-  },
-  { condition: "Hernia",
-    drugs: ["Analgesics (e.g., Paracetamol)"],
-    prescription: "Pain relief as required; surgical repair is definitive",
-    diet: ["Light meals post-op", "Hydration"]
-  },
-  { condition: "Depression",
-    drugs: ["Fluoxetine", "Sertraline"],
-    prescription: "Fluoxetine 20mg daily or Sertraline 50mg daily",
-    diet: ["Balanced diet", "Omega-3"]
-  },
-  { condition: "Anxiety",
-    drugs: ["Buspirone", "Escitalopram"],
-    prescription: "Buspirone 10mg twice daily or Escitalopram 10mg daily",
-    diet: ["Fruits", "Hydration"]
-  },
-  { condition: "Insomnia",
-    drugs: ["Zolpidem", "Melatonin"],
-    prescription: "Zolpidem 5-10mg at bedtime; Melatonin as needed",
-    diet: ["Light evening meals", "Avoid caffeine"]
-  },
-  { condition: "Allergy",
-    drugs: ["Loratadine", "Cetirizine"],
-    prescription: "Loratadine 10mg once daily or Cetirizine 10mg once daily",
-    diet: ["Avoid allergens", "Hydration"]
-  },
-  { condition: "Eczema",
-    drugs: ["Topical corticosteroid cream", "Moisturizer"],
-    prescription: "Apply topical steroids as prescribed; moisturize frequently",
-    diet: ["Balanced diet", "Omega-3"]
-  },
-  { condition: "Psoriasis",
-    drugs: ["Topical corticosteroid", "Methotrexate (systemic)"],
-    prescription: "Topical therapy for mild; systemic therapy if severe",
-    diet: ["Low fat", "Hydration"]
-  },
-  { condition: "Gonorrhea",
-    drugs: ["Ceftriaxone"],
-    prescription: "Ceftriaxone 500mg intramuscular single dose",
-    diet: ["Hydration", "Fruits"]
-  },
-  { condition: "Syphilis",
-    drugs: ["Benzathine penicillin G"],
-    prescription: "Benzathine penicillin G 2.4 million units intramuscular single dose",
-    diet: ["Hydration", "Low salt"]
-  },
-  { condition: "UTI",
-    drugs: ["Nitrofurantoin", "Cefuroxime"],
-    prescription: "Nitrofurantoin 100mg twice daily for 5 days",
-    diet: ["Hydration", "Vegetables"]
-  },
-  { condition: "Kidney Stones",
-    drugs: ["Tamsulosin", "Pain relief (Ibuprofen)"],
-    prescription: "Tamsulosin 0.4mg once daily; analgesics as needed",
-    diet: ["Plenty of fluids", "Low salt"]
-  },
-  { condition: "Prostate Enlargement",
-    drugs: ["Tamsulosin", "Finasteride"],
-    prescription: "Tamsulosin 0.4mg daily; Finasteride 5mg daily",
-    diet: ["Vegetables", "Hydration"]
-  },
-  { condition: "Menstrual Pain",
-    drugs: ["Ibuprofen", "Mefenamic acid"],
-    prescription: "Ibuprofen 400mg every 8 hours as needed",
-    diet: ["Warm fluids", "Fruits"]
-  },
-  { condition: "Fibroids",
-    drugs: ["Tranexamic acid", "Leuprolide (if severe)"],
-    prescription: "Tranexamic acid during heavy bleeding; surgical referral if indicated",
-    diet: ["Balanced diet", "Hydration"]
-  },
-  { condition: "Ovarian Cyst",
-    drugs: ["Analgesics", "Hormonal therapy (as advised)"],
-    prescription: "Pain relief and hormonal therapy if indicated",
-    diet: ["Fiber-rich meals", "Fruits"]
-  },
-  { condition: "Ear Infection",
-    drugs: ["Amoxicillin", "Ofloxacin ear drops"],
-    prescription: "Amoxicillin 500mg three times daily for 7 days; ear drops as directed",
-    diet: ["Hydration", "Soft foods"]
-  },
-  { condition: "Toothache",
-    drugs: ["Ibuprofen", "Amoxicillin (if infection)"],
-    prescription: "Ibuprofen 400mg as needed; Amoxicillin 500mg three times daily for infection",
-    diet: ["Soft foods", "Warm fluids"]
-  },
-  { condition: "Obesity",
-    drugs: ["Orlistat"],
-    prescription: "Orlistat 120mg three times daily with meals",
-    diet: ["Low fat", "High fiber"]
-  },
-  { condition: "Back Pain",
-    drugs: ["Ibuprofen", "Paracetamol"],
-    prescription: "Ibuprofen 400mg every 8 hours with food",
-    diet: ["Balanced meals", "Hydration"]
-  },
-  { condition: "Scabies",
-    drugs: ["Permethrin cream"],
-    prescription: "Apply Permethrin cream overnight and repeat in 7 days",
-    diet: ["Balanced diet"]
-  },
-  { condition: "Ringworm",
-    drugs: ["Clotrimazole cream"],
-    prescription: "Apply Clotrimazole twice daily for 2-4 weeks",
-    diet: ["Balanced diet"]
-  }
-];  
-
+  const illnessData = [
+    { condition: "Malaria",
+      drugs: ["Artemether", "Lumefantrine"],
+      prescription: "Artemether/Lumefantrine 20/120mg, 4 tablets twice daily for 3 days",
+      diet: ["Plenty of fluids", "Fruits", "Light meals"]
+    },
+    { condition: "Typhoid",
+      drugs: ["Ciprofloxacin", "Paracetamol"],
+      prescription: "Ciprofloxacin 500mg twice daily for 7 days; Paracetamol 500mg for fever as needed",
+      diet: ["Boiled foods", "Hydration", "Avoid spicy meals"]
+    },
+    { condition: "Asthma",
+      drugs: ["Salbutamol inhaler", "Prednisolone"],
+      prescription: "Use Salbutamol inhaler 2 puffs every 6 hours as needed; Prednisolone as directed",
+      diet: ["Avoid allergens", "Eat omega-3 rich foods"]
+    },
+    { condition: "Diabetes",
+      drugs: ["Metformin", "Insulin glargine"],
+      prescription: "Metformin 500mg twice daily; adjust insulin as prescribed",
+      diet: ["Low sugar", "High fiber diet"]
+    },
+    { condition: "Hypertension",
+      drugs: ["Lisinopril", "Amlodipine"],
+      prescription: "Lisinopril 10mg once daily; Amlodipine 5mg once daily",
+      diet: ["Low salt", "More vegetables"]
+    },
+    { condition: "Ulcer",
+      drugs: ["Omeprazole", "Aluminium hydroxide antacid"],
+      prescription: "Omeprazole 20mg once daily before breakfast for 14 days",
+      diet: ["No spicy food", "Frequent small meals"]
+    },
+    { condition: "Hepatitis B",
+      drugs: ["Tenofovir disoproxil", "Entecavir"],
+      prescription: "Tenofovir 300mg once daily or Entecavir 0.5mg daily as directed",
+      diet: ["Low-fat diet", "Plenty of fruits"]
+    },
+    { condition: "COVID-19",
+      drugs: ["Paracetamol", "Vitamin C", "Zinc"],
+      prescription: "Paracetamol 500mg every 6 hours for fever; supportive care",
+      diet: ["Fruits", "Plenty of rest", "Hydration"]
+    },
+    { condition: "Tuberculosis",
+      drugs: ["Rifampicin", "Isoniazid", "Pyrazinamide", "Ethambutol"],
+      prescription: "Standard 4-drug TB therapy for 2 months, then 2-drug continuation for 4 months",
+      diet: ["High protein", "Vitamin supplements"]
+    },
+    { condition: "Pneumonia",
+      drugs: ["Azithromycin", "Amoxicillin"],
+      prescription: "Azithromycin 500mg once daily for 3 days or Amoxicillin 500mg three times daily for 7 days",
+      diet: ["Warm fluids", "Soft food"]
+    },
+    { condition: "Anemia",
+      drugs: ["Ferrous sulfate", "Folic acid"],
+      prescription: "Ferrous sulfate 325mg once or twice daily; Folic acid 5mg daily",
+      diet: ["Iron-rich foods", "Vegetables", "Vitamin C"]
+    },
+    { condition: "Arthritis",
+      drugs: ["Ibuprofen", "Methotrexate (if chronic)"],
+      prescription: "Ibuprofen 400mg every 8 hours with food; Disease-modifying drugs as prescribed",
+      diet: ["Low salt", "High protein", "Fruits"]
+    },
+    { condition: "Cataract",
+      drugs: ["Topical NSAID eye drops", "Antibiotic eye drops (post-op)"],
+      prescription: "Eye drops as directed after surgery",
+      diet: ["Balanced diet", "Omega-3"]
+    },
+    { condition: "Glaucoma",
+      drugs: ["Timolol eye drops", "Latanoprost"],
+      prescription: "Timolol 1 drop twice daily; Latanoprost 1 drop at night",
+      diet: ["Vegetables", "Avoid high caffeine"]
+    },
+    { condition: "Sinusitis",
+      drugs: ["Amoxicillin-clavulanate", "Nasal saline"],
+      prescription: "Amoxicillin-clavulanate 875/125mg twice daily for 7-10 days",
+      diet: ["Warm fluids", "Fruits"]
+    },
+    { condition: "Tonsillitis",
+      drugs: ["Penicillin V", "Ibuprofen"],
+      prescription: "Penicillin V 500mg every 6 hours for 10 days; Ibuprofen for pain",
+      diet: ["Soft foods", "Hydration"]
+    },
+    { condition: "Appendicitis",
+      drugs: ["Ceftriaxone", "Metronidazole (pre/post-op)"],
+      prescription: "IV antibiotics as per surgical protocol",
+      diet: ["Nil by mouth pre-op; balanced after recovery"]
+    },
+    { condition: "Hernia",
+      drugs: ["Analgesics (e.g., Paracetamol)"],
+      prescription: "Pain relief as required; surgical repair is definitive",
+      diet: ["Light meals post-op", "Hydration"]
+    },
+    { condition: "Depression",
+      drugs: ["Fluoxetine", "Sertraline"],
+      prescription: "Fluoxetine 20mg daily or Sertraline 50mg daily",
+      diet: ["Balanced diet", "Omega-3"]
+    },
+    { condition: "Anxiety",
+      drugs: ["Buspirone", "Escitalopram"],
+      prescription: "Buspirone 10mg twice daily or Escitalopram 10mg daily",
+      diet: ["Fruits", "Hydration"]
+    },
+    { condition: "Insomnia",
+      drugs: ["Zolpidem", "Melatonin"],
+      prescription: "Zolpidem 5-10mg at bedtime; Melatonin as needed",
+      diet: ["Light evening meals", "Avoid caffeine"]
+    },
+    { condition: "Allergy",
+      drugs: ["Loratadine", "Cetirizine"],
+      prescription: "Loratadine 10mg once daily or Cetirizine 10mg once daily",
+      diet: ["Avoid allergens", "Hydration"]
+    },
+    { condition: "Eczema",
+      drugs: ["Topical corticosteroid cream", "Moisturizer"],
+      prescription: "Apply topical steroids as prescribed; moisturize frequently",
+      diet: ["Balanced diet", "Omega-3"]
+    },
+    { condition: "Psoriasis",
+      drugs: ["Topical corticosteroid", "Methotrexate (systemic)"],
+      prescription: "Topical therapy for mild; systemic therapy if severe",
+      diet: ["Low fat", "Hydration"]
+    },
+    { condition: "Gonorrhea",
+      drugs: ["Ceftriaxone"],
+      prescription: "Ceftriaxone 500mg intramuscular single dose",
+      diet: ["Hydration", "Fruits"]
+    },
+    { condition: "Syphilis",
+      drugs: ["Benzathine penicillin G"],
+      prescription: "Benzathine penicillin G 2.4 million units intramuscular single dose",
+      diet: ["Hydration", "Low salt"]
+    },
+    { condition: "UTI",
+      drugs: ["Nitrofurantoin", "Cefuroxime"],
+      prescription: "Nitrofurantoin 100mg twice daily for 5 days",
+      diet: ["Hydration", "Vegetables"]
+    },
+    { condition: "Kidney Stones",
+      drugs: ["Tamsulosin", "Pain relief (Ibuprofen)"],
+      prescription: "Tamsulosin 0.4mg once daily; analgesics as needed",
+      diet: ["Plenty of fluids", "Low salt"]
+    },
+    { condition: "Prostate Enlargement",
+      drugs: ["Tamsulosin", "Finasteride"],
+      prescription: "Tamsulosin 0.4mg daily; Finasteride 5mg daily",
+      diet: ["Vegetables", "Hydration"]
+    },
+    { condition: "Menstrual Pain",
+      drugs: ["Ibuprofen", "Mefenamic acid"],
+      prescription: "Ibuprofen 400mg every 8 hours as needed",
+      diet: ["Warm fluids", "Fruits"]
+    },
+    { condition: "Fibroids",
+      drugs: ["Tranexamic acid", "Leuprolide (if severe)"],
+      prescription: "Tranexamic acid during heavy bleeding; surgical referral if indicated",
+      diet: ["Balanced diet", "Hydration"]
+    },
+    { condition: "Ovarian Cyst",
+      drugs: ["Analgesics", "Hormonal therapy (as advised)"],
+      prescription: "Pain relief and hormonal therapy if indicated",
+      diet: ["Fiber-rich meals", "Fruits"]
+    },
+    { condition: "Ear Infection",
+      drugs: ["Amoxicillin", "Ofloxacin ear drops"],
+      prescription: "Amoxicillin 500mg three times daily for 7 days; ear drops as directed",
+      diet: ["Hydration", "Soft foods"]
+    },
+    { condition: "Toothache",
+      drugs: ["Ibuprofen", "Amoxicillin (if infection)"],
+      prescription: "Ibuprofen 400mg as needed; Amoxicillin 500mg three times daily for infection",
+      diet: ["Soft foods", "Warm fluids"]
+    },
+    { condition: "Obesity",
+      drugs: ["Orlistat"],
+      prescription: "Orlistat 120mg three times daily with meals",
+      diet: ["Low fat", "High fiber"]
+    },
+    { condition: "Back Pain",
+      drugs: ["Ibuprofen", "Paracetamol"],
+      prescription: "Ibuprofen 400mg every 8 hours with food",
+      diet: ["Balanced meals", "Hydration"]
+    },
+    { condition: "Scabies",
+      drugs: ["Permethrin cream"],
+      prescription: "Apply Permethrin cream overnight and repeat in 7 days",
+      diet: ["Balanced diet"]
+    },
+    { condition: "Ringworm",
+      drugs: ["Clotrimazole cream"],
+      prescription: "Apply Clotrimazole twice daily for 2-4 weeks",
+      diet: ["Balanced diet"]
+    }
+  ];
   const illnessSelect = document.getElementById("illness");
   illnessData.forEach(entry => {
     const opt = document.createElement("option");
-    opt.value = entry.condition;
-    opt.textContent = entry.condition;
+    opt.value = entry.condition; opt.textContent = entry.condition;
     illnessSelect.appendChild(opt);
   });
 
-  // ************** SYMPTOM SUPPORT **************
   const symptomSupport = {
     fever: { drugs: ["Paracetamol"], prescription: "500mg every 6 hours" },
     cold: { drugs: ["Vitamin C"], prescription: "1000mg daily" },
@@ -465,14 +690,13 @@ const illnessData = [
     rash: { drugs: ["Antihistamine Cream"], prescription: "Apply twice daily" },
     dizziness: { drugs: ["Meclizine"], prescription: "25mg as needed" }
   };
+  // render quick helpers
+  document.getElementById('helperList').innerHTML =
+    Object.keys(symptomSupport).map(s=>`<li>${s} — ${symptomSupport[s].drugs.join(", ")} (${symptomSupport[s].prescription})</li>`).join("");
 
-  // ************** HISTORY (PERSISTENT) **************
-  const HISTORY_KEY = "prescriptionHistory";
-  let prescriptionHistory = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-
-  function saveHistory() {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(prescriptionHistory));
-  }
+  /*************** HISTORY (used by doctors + patient records) ***************/
+  let prescriptionHistory = loadJSON(KEYS.history, []);
+  function saveHistory(){ saveJSON(KEYS.history, prescriptionHistory); }
 
   function clearHistory() {
     if (confirm("Are you sure you want to clear all prescription history?")) {
@@ -481,27 +705,19 @@ const illnessData = [
       renderHistory();
     }
   }
-
-  function renderHistory() {
+  function renderHistory(){
     const historyList = document.getElementById("historyList");
     const q = (document.getElementById("historySearch")?.value || "").toLowerCase().trim();
     historyList.innerHTML = "";
-
     const filtered = prescriptionHistory.filter(r =>
-      !q ||
-      r.patient.toLowerCase().includes(q) ||
-      r.illness.toLowerCase().includes(q)
+      !q || r.patient.toLowerCase().includes(q) || r.illness.toLowerCase().includes(q)
     );
-
     if (filtered.length === 0) {
       const empty = document.createElement("li");
-      empty.textContent = "No history yet.";
-      empty.style.opacity = "0.8";
-      historyList.appendChild(empty);
-      return;
+      empty.textContent = "No history yet."; empty.style.opacity = "0.85";
+      historyList.appendChild(empty); return;
     }
-
-    filtered.forEach((item, index) => {
+    filtered.slice().reverse().forEach((item) => {
       const li = document.createElement("li");
       li.innerHTML = `<strong>${item.patient}</strong> — ${item.illness}<br>
         <span style="opacity:.85">By ${item.doctor} · ${item.date}</span>`;
@@ -509,24 +725,17 @@ const illnessData = [
       historyList.appendChild(li);
     });
   }
-
-  function addToHistory(record) {
-    prescriptionHistory.push(record);
-    saveHistory();
-    renderHistory();
-  }
-
-  function showRecord(record) {
+  function showRecord(record){
     const result = `
       <p><strong>Patient:</strong> ${record.patient}</p>
       <p><strong>Age:</strong> ${record.age}</p>
       <p><strong>Illness:</strong> ${record.illness}</p>
       <p><strong>Days Sick:</strong> ${record.days} days</p>
-      <p><strong>Symptoms:</strong> ${record.symptoms.join(", ") || "None"}</p>
+      <p><strong>Symptoms:</strong> ${(record.symptoms||[]).join(", ") || "None"}</p>
       <hr>
-      <p><strong>Drugs:</strong> ${record.drugs.join(", ")}</p>
+      <p><strong>Drugs:</strong> ${(record.drugs||[]).join(", ")}</p>
       <p><strong>Prescription:</strong><br>${record.prescription.replace(/\n/g,"<br>")}</p>
-      <p><strong>Recommended Diet:</strong> ${record.diet.join(", ")}</p>
+      <p><strong>Recommended Diet:</strong> ${(record.diet||[]).join(", ")}</p>
       <hr>
       <p class="muted">Created on ${record.date}</p>
       <p><strong>Signed ✍️ by:</strong> ${record.doctor}</p>
@@ -535,7 +744,233 @@ const illnessData = [
     document.getElementById("modal").style.display = "flex";
   }
 
-  // ************** PRESCRIPTION GENERATION **************
+  /*************** MESSAGES (doctor <-> patient) ***************/
+  function getMessages(){ return loadJSON(KEYS.messages, []); }
+  function saveMessages(arr){ saveJSON(KEYS.messages, arr); }
+
+  // Create a thread key doctor|patient
+  function threadKey(doctor, patient){ return `${doctor}|${patient}`; }
+
+  // Patient send initial message (with optional image)
+  function patientSend(){
+    if(!currentPatientUser) return alert("Please login as patient.");
+    const patients = loadJSON(KEYS.patients, {});
+    const doc = document.getElementById('patientDoctorSelect').value;
+    const text = document.getElementById('patientMsgText').value.trim();
+    const fileEl = document.getElementById('patientImage');
+    if(!doc) return alert("Choose a doctor.");
+    if(!text && !fileEl.files[0]) return alert("Write a message or attach a picture.");
+
+    const pushMessage = (imageDataUrl) => {
+      const msgs = getMessages();
+      msgs.push({
+        id: Date.now(),
+        type: "message",
+        fromRole: "patient",
+        from: currentPatientUser,
+        to: doc,
+        doctor: doc,
+        patient: currentPatientUser,
+        text,
+        image: imageDataUrl || "",
+        timestamp: new Date().toLocaleString()
+      });
+      saveMessages(msgs);
+      document.getElementById('patientMsgText').value = "";
+      fileEl.value = "";
+      renderPatientThreads();
+      alert("Message sent to " + doc);
+    };
+
+    if(fileEl.files && fileEl.files[0]){
+      const reader = new FileReader();
+      reader.onload = () => pushMessage(reader.result);
+      reader.readAsDataURL(fileEl.files[0]);
+    } else {
+      pushMessage("");
+    }
+  }
+
+  // Patient conversation list + open chat
+  function renderPatientThreads(){
+    const list = document.getElementById('patientThreads');
+    const msgs = getMessages().filter(m=>m.patient===currentPatientUser);
+    const byDoctor = [...new Set(msgs.map(m=>m.doctor))];
+    if(byDoctor.length===0){ list.innerHTML = `<li>No messages yet.</li>`; return; }
+    list.innerHTML = "";
+    byDoctor.forEach(doc=>{
+      const last = msgs.filter(m=>m.doctor===doc).slice(-1)[0];
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${doc}</strong><br><span class="muted">${(last?.text||'').slice(0,80)}</span>`;
+      li.onclick = ()=>openPatientChat(doc);
+      list.appendChild(li);
+    });
+  }
+  function openPatientChat(doc){
+    activePatientChatWith = doc;
+    document.getElementById('patientChatArea').classList.remove('hide');
+    const header = document.getElementById('patientChatHeader');
+    header.innerHTML = `<h3>Chat with ${doc}</h3>`;
+    renderPatientChatThread();
+  }
+  function renderPatientChatThread(){
+    const thread = document.getElementById('patientChatThread');
+    const msgs = getMessages().filter(m=>m.patient===currentPatientUser && m.doctor===activePatientChatWith);
+    thread.innerHTML = msgs.map(m=>{
+      const who = m.fromRole==="patient" ? "You" : m.from;
+      const badge = m.type==="prescription" ? `<span class="pill">Prescription</span>` :
+                    m.type==="feedback" ? `<span class="pill">Feedback</span>` : '';
+      const img = m.image ? `<div><img class="thumb" src="${m.image}" alt="attachment"></div>` : "";
+      return `<div class="card" style="margin-bottom:8px">
+        <div class="inline"><strong>${who}</strong> ${badge} <span class="muted">· ${m.timestamp}</span></div>
+        <div>${(m.text||'').replace(/\n/g,'<br>')}</div>${img}
+      </div>`;
+    }).join("");
+  }
+  function patientSendReply(){
+    const text = document.getElementById('patientReplyText').value.trim();
+    if(!text) return;
+    const msgs = getMessages();
+    msgs.push({
+      id: Date.now(),
+      type: "message",
+      fromRole: "patient",
+      from: currentPatientUser,
+      to: activePatientChatWith,
+      doctor: activePatientChatWith,
+      patient: currentPatientUser,
+      text,
+      image:"",
+      timestamp: new Date().toLocaleString()
+    });
+    saveMessages(msgs);
+    document.getElementById('patientReplyText').value = "";
+    renderPatientChatThread();
+    renderPatientThreads();
+  }
+  function closePatientChat(){
+    activePatientChatWith = "";
+    document.getElementById('patientChatArea').classList.add('hide');
+  }
+  function clearPatientMsg(){
+    document.getElementById('patientMsgText').value = "";
+    document.getElementById('patientImage').value = "";
+  }
+
+  // Doctor inbox
+  function renderDoctorInbox(){
+    const list = document.getElementById('doctorInboxList');
+    const q = (document.getElementById('docInboxSearch')?.value||"").toLowerCase().trim();
+    const msgs = getMessages().filter(m=>m.doctor===doctorName);
+    const byPatient = [...new Set(msgs.map(m=>m.patient))].filter(p=>!q || p.toLowerCase().includes(q));
+    if(byPatient.length===0){ list.innerHTML = `<li>No messages yet.</li>`; return; }
+    list.innerHTML = "";
+    byPatient.forEach(patient=>{
+      const last = msgs.filter(m=>m.patient===patient).slice(-1)[0];
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${patient}</strong><br><span class="muted">${(last?.text||'').slice(0,80)}</span>`;
+      li.onclick = ()=>openDoctorChat(patient);
+      list.appendChild(li);
+    });
+  }
+  function openDoctorChat(patient){
+    activeDoctorChatWith = patient;
+    document.getElementById('doctorChatArea').classList.remove('hide');
+    document.getElementById('doctorChatHeader').innerHTML = `<h3>${patient}</h3> <span class="pill">Thread</span>`;
+    renderDoctorChatThread();
+  }
+  function renderDoctorChatThread(){
+    const thread = document.getElementById('doctorChatThread');
+    const msgs = getMessages().filter(m=>m.doctor===doctorName && m.patient===activeDoctorChatWith);
+    thread.innerHTML = msgs.map(m=>{
+      const who = m.fromRole==="doctor" ? "You" : m.from;
+      const badge = m.type==="prescription" ? `<span class="pill">Prescription</span>` :
+                    m.type==="feedback" ? `<span class="pill">Feedback</span>` : '';
+      const img = m.image ? `<div><img class="thumb" src="${m.image}" alt="attachment"></div>` : "";
+      return `<div class="card" style="margin-bottom:8px">
+        <div class="inline"><strong>${who}</strong> ${badge} <span class="muted">· ${m.timestamp}</span></div>
+        <div>${(m.text||'').replace(/\n/g,'<br>')}</div>${img}
+      </div>`;
+    }).join("");
+  }
+  function doctorSendReply(){
+    const text = document.getElementById('doctorReplyText').value.trim();
+    if(!text) return;
+    const msgs = getMessages();
+    msgs.push({
+      id: Date.now(),
+      type: "message",
+      fromRole: "doctor",
+      from: doctorName,
+      to: activeDoctorChatWith,
+      doctor: doctorName,
+      patient: activeDoctorChatWith,
+      text,
+      image:"",
+      timestamp: new Date().toLocaleString()
+    });
+    saveMessages(msgs);
+    document.getElementById('doctorReplyText').value = "";
+    renderDoctorChatThread();
+    renderDoctorInbox();
+  }
+  function closeDoctorChat(){
+    activeDoctorChatWith = "";
+    document.getElementById('doctorChatArea').classList.add('hide');
+  }
+
+  // When a prescription is made to a known patient, deliver it as a message too
+  function deliverPrescriptionToPatient(record){
+    const patients = loadJSON(KEYS.patients, {});
+    if(!patients[record.patient]) return; // not a registered patient, skip inbox delivery
+    const text = `Prescription for ${record.patient}
+Illness: ${record.illness}
+Drugs: ${record.drugs.join(", ")}
+Instructions:
+${record.prescription}
+Diet: ${record.diet.join(", ")}`;
+    const msgs = getMessages();
+    msgs.push({
+      id: Date.now(),
+      type: "prescription",
+      fromRole: "doctor",
+      from: doctorName,
+      to: record.patient,
+      doctor: doctorName,
+      patient: record.patient,
+      text,
+      image:"",
+      recordId: record.id,
+      timestamp: new Date().toLocaleString()
+    });
+    saveMessages(msgs);
+  }
+
+  // Patient feedback on a record
+  function sendFeedback(record){
+    const text = prompt("Write feedback to your doctor about this prescription:");
+    if(!text) return;
+    const msgs = getMessages();
+    msgs.push({
+      id: Date.now(),
+      type: "feedback",
+      fromRole: "patient",
+      from: currentPatientUser,
+      to: record.doctor,
+      doctor: record.doctor,
+      patient: currentPatientUser,
+      text: `Feedback on ${record.illness} (Record ${record.id}):\n` + text,
+      image:"",
+      recordId: record.id,
+      timestamp: new Date().toLocaleString()
+    });
+    saveMessages(msgs);
+    alert("Feedback sent to " + record.doctor);
+    // refresh any open threads
+    if(activePatientChatWith === record.doctor){ renderPatientChatThread(); }
+  }
+
+  /*************** DOCTOR FORM: GENERATE PRESCRIPTION ***************/
   function generatePrescription() {
     const name = document.getElementById("patientName").value.trim();
     const age = document.getElementById("patientAge").value;
@@ -548,10 +983,7 @@ const illnessData = [
       return;
     }
 
-    const symptoms = rawSymptoms
-      ? rawSymptoms.split(/[\s,]+/).filter(Boolean)
-      : [];
-
+    const symptoms = rawSymptoms ? rawSymptoms.split(/[\s,]+/).filter(Boolean) : [];
     const data = illnessData.find(entry => entry.condition === illness);
     let extraDrugs = [], extraPrescriptions = [];
 
@@ -562,14 +994,12 @@ const illnessData = [
       }
     });
 
-    if (!data) {
-      alert("No data found for selected illness.");
-      return;
-    }
+    if (!data) { alert("No data found for selected illness."); return; }
 
     const combinedDrugs = [...data.drugs, ...extraDrugs];
     const fullPrescriptionLines = [data.prescription, ...extraPrescriptions].filter(Boolean);
     const fullPrescriptionText = fullPrescriptionLines.join("\n");
+
     const resultHtml = `
       <p><strong>Patient:</strong> ${name}</p>
       <p><strong>Age:</strong> ${age}</p>
@@ -583,11 +1013,11 @@ const illnessData = [
       <hr>
       <p><strong>Signed ✍️ by:</strong> ${doctorName}</p>
     `;
-
     document.getElementById("output").innerHTML = resultHtml;
     document.getElementById("modal").style.display = "flex";
 
     const record = {
+      id: Date.now(),
       doctor: doctorName,
       patient: name,
       age: age,
@@ -599,23 +1029,65 @@ const illnessData = [
       diet: data.diet,
       date: new Date().toLocaleString()
     };
-    addToHistory(record);
+    prescriptionHistory.push(record);
+    saveHistory();
+    renderHistory();
+
+    // Deliver to patient's inbox if registered
+    deliverPrescriptionToPatient(record);
   }
 
-  // ************** UTILITIES **************
-  function resetForm() {
-    document.getElementById("patientName").value = "";
-    document.getElementById("patientAge").value = "";
-    document.getElementById("illness").value = "";
-    document.getElementById("days").value = "";
-    document.getElementById("symptoms").value = "";
-    document.getElementById("output").innerHTML = "";
+  /*************** PATIENT RECORDS RENDER ****************/
+  function renderPatientRecords(){
+    const list = document.getElementById('patientRecordsList');
+    const q = (document.getElementById('patientRecordSearch')?.value||"").toLowerCase().trim();
+    const my = prescriptionHistory.filter(r=>r.patient===currentPatientUser && (!q || r.illness.toLowerCase().includes(q)));
+    if(my.length===0){ list.innerHTML = `<li>No records yet.</li>`; return; }
+    list.innerHTML = "";
+    my.slice().reverse().forEach(r=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${r.illness}</strong> · ${r.date}<br>
+        <span class="muted">By ${r.doctor} · Drugs: ${r.drugs.join(", ")}</span>
+        <div class="btn-row" style="margin-top:8px">
+          <button class="btn-ghost" onclick="showRecord(${JSON.stringify(r).replace(/"/g,'&quot;')})">View</button>
+          <button onclick='sendFeedback(${JSON.stringify(r).replace(/"/g,'&quot;')})'>Send Feedback</button>
+        </div>`;
+      list.appendChild(li);
+    });
   }
 
-  function closeModal() {
-    document.getElementById("modal").style.display = "none";
+  /*************** PATIENT PROFILE ****************/
+  function populateDoctorSelects(){
+    const doctors = Object.keys(loadJSON(KEYS.doctors, {}));
+    const sel1 = document.getElementById('patientDoctorSelect');
+    const sel2 = document.getElementById('patientAssignedDoctor');
+    [sel1, sel2].forEach(sel=>{
+      sel.innerHTML = `<option value="">Select Doctor</option>` + doctors.map(d=>`<option value="${d}">${d}</option>`).join("");
+    });
+    const patients = loadJSON(KEYS.patients, {});
+    const my = patients[currentPatientUser];
+    if(my?.assignedDoctor){
+      sel1.value = my.assignedDoctor;
+      sel2.value = my.assignedDoctor;
+    }
+  }
+  function loadPatientProfile(){
+    const patients = loadJSON(KEYS.patients, {});
+    const my = patients[currentPatientUser];
+    if(my) document.getElementById('patientLoggedInAs').textContent = `Logged in as: ${currentPatientUser}`;
+  }
+  function savePatientProfile(){
+    const sel = document.getElementById('patientAssignedDoctor').value;
+    const patients = loadJSON(KEYS.patients, {});
+    if(!patients[currentPatientUser]) return;
+    patients[currentPatientUser].assignedDoctor = sel;
+    saveJSON(KEYS.patients, patients);
+    alert("Profile saved.");
+    populateDoctorSelects();
   }
 
+  /*************** PRINT / SHARE & UTILITIES ***************/
+  function closeModal(){ document.getElementById("modal").style.display = "none"; }
   function sharePrescription() {
     const result = document.getElementById("output").innerText;
     if (navigator.share) {
@@ -625,22 +1097,52 @@ const illnessData = [
       alert("Prescription copied to clipboard!");
     }
   }
-
   function printPrescription() {
     const content = document.getElementById("output").innerHTML;
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>Print Prescription</title></head><body>');
-    printWindow.document.write(content);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
+    const win = window.open('', '', 'height=700,width=900');
+    win.document.write('<html><head><title>Print Prescription</title></head><body>');
+    win.document.write(content);
+    win.document.write('</body></html>');
+    win.document.close();
+    win.print();
   }
-
   function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("visible");
   }
 
-  // Initial render of history (in case user opens before login)
+  // Doctor/Patient tabs
+  function switchDoctorTab(which){
+    const formPanel = document.getElementById('doctorFormPanel');
+    const inboxPanel = document.getElementById('doctorInboxPanel');
+    document.getElementById('tabDocForm').classList.toggle('active', which==='form');
+    document.getElementById('tabDocInbox').classList.toggle('active', which!=='form');
+    formPanel.classList.toggle('hide', which!=='form');
+    inboxPanel.classList.toggle('hide', which==='form');
+  }
+  function switchPatientTab(which){
+    document.getElementById('tabPMsgs').classList.toggle('active', which==='messages');
+    document.getElementById('tabPRecords').classList.toggle('active', which==='records');
+    document.getElementById('tabPProfile').classList.toggle('active', which==='profile');
+    document.getElementById('patientMessagesPanel').classList.toggle('hide', which!=='messages');
+    document.getElementById('patientRecordsPanel').classList.toggle('hide', which!=='records');
+    document.getElementById('patientProfilePanel').classList.toggle('hide', which!=='profile');
+  }
+
+  // Export all app data as JSON (for backup)
+  function exportJSON(){
+    const blob = new Blob([JSON.stringify({
+      doctors: loadJSON(KEYS.doctors, {}),
+      patients: loadJSON(KEYS.patients, {}),
+      messages: loadJSON(KEYS.messages, []),
+      history: loadJSON(KEYS.history, [])
+    }, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'dds-backup.json'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Initial render of history (in case open before login)
   renderHistory();
   </script>
 </body>
